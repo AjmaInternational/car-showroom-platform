@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { supabaseBrowser } from "@/lib/supabaseBrowser"
 
 type Car = {
@@ -22,11 +22,7 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    fetchCars()
-  }, [])
-
-  async function fetchCars() {
+  const fetchCars = useCallback(async () => {
     const { data, error } = await supabaseBrowser
       .from("cars")
       .select("*")
@@ -40,7 +36,11 @@ export default function HomePage() {
     }
 
     setLoading(false)
-  }
+  }, [])
+
+  useEffect(() => {
+    void fetchCars() // eslint-disable-line react-hooks/set-state-in-effect
+  }, [fetchCars])
 
   if (loading) return <p style={{ padding: 40 }}>Loading…</p>
 
@@ -68,7 +68,8 @@ export default function HomePage() {
           }}
         >
           {car.image_urls?.[0] && (
-            <img src={car.image_urls[0]} width={300} />
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img src={car.image_urls[0]} width={300} alt={car.title} />
           )}
 
           <h2>

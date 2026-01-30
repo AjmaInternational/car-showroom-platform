@@ -102,7 +102,7 @@ export default function EditCarPage() {
           <input
             key={k}
             placeholder={label}
-            value={(form as any)[k]}
+            value={form[k as keyof typeof form]}
             onChange={(e) => update(k, e.target.value)}
             required
             style={{ width: "100%", padding: 10, marginTop: 10 }}
