@@ -91,126 +91,174 @@ export default function AddCarPage() {
     router.push("/safranbrother")
   }
 
+  const inputClasses =
+    "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+
   return (
-    <div style={{ padding: 40, maxWidth: 720 }}>
-      <h1 style={{ fontSize: 28, fontWeight: "bold" }}>
-        Add New Car
-      </h1>
+    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">Add New Car</h1>
+          <p className="mt-2 text-sm text-gray-600">
+            Enter the details of the vehicle to list it in the showroom.
+          </p>
+        </div>
 
-      <form onSubmit={handleSubmit}
-  onKeyDown={(e) => {
-    if (e.key === "Enter") {
-      e.preventDefault()
-    }
-  }}>
-        
-        {[
-          ["title", "Car Title"],
-          ["brand", "Brand"],
-          ["model", "Model"],
-          ["year", "Year"],
-          ["mileage", "Mileage"],
-          ["color", "Color"],
-          ["price", "Price (£)"],
-          ["location", "Location (e.g. Kingston, London)"],
-        ].map(([key, label]) => (
-          <input
-            key={key}
-            placeholder={label}
-            value={form[key as keyof typeof form]}
-            onChange={(e) => updateField(key, e.target.value)}
-            required
-            style={{ width: "100%", padding: 10, marginTop: 10 }}
-          />
-        ))}
-
-        {/* SELECT FIELDS */}
-        <select
-          value={form.fuel}
-          onChange={(e) => updateField("fuel", e.target.value)}
-          style={{ width: "100%", padding: 10, marginTop: 10 }}
+        <form
+          onSubmit={handleSubmit}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault()
+            }
+          }}
+          className="space-y-6"
         >
-          <option>Petrol</option>
-          <option>Diesel</option>
-          <option>Hybrid</option>
-          <option>Electric</option>
-        </select>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {[
+              ["title", "Car Title"],
+              ["brand", "Brand"],
+              ["model", "Model"],
+              ["year", "Year"],
+              ["mileage", "Mileage"],
+              ["color", "Color"],
+              ["price", "Price (£)"],
+              ["location", "Location"],
+            ].map(([key, label]) => (
+              <div key={key}>
+                <label className="block text-sm font-medium text-gray-700">
+                  {label}
+                </label>
+                <input
+                  placeholder={label}
+                  value={form[key as keyof typeof form]}
+                  onChange={(e) => updateField(key, e.target.value)}
+                  required
+                  className={inputClasses}
+                />
+              </div>
+            ))}
 
-        <select
-          value={form.transmission}
-          onChange={(e) => updateField("transmission", e.target.value)}
-          style={{ width: "100%", padding: 10, marginTop: 10 }}
-        >
-          <option>Automatic</option>
-          <option>Manual</option>
-        </select>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Fuel Type
+              </label>
+              <select
+                value={form.fuel}
+                onChange={(e) => updateField("fuel", e.target.value)}
+                className={inputClasses}
+              >
+                <option>Petrol</option>
+                <option>Diesel</option>
+                <option>Hybrid</option>
+                <option>Electric</option>
+              </select>
+            </div>
 
-        <select
-          value={form.condition}
-          onChange={(e) => updateField("condition", e.target.value)}
-          style={{ width: "100%", padding: 10, marginTop: 10 }}
-        >
-          <option>Used</option>
-          <option>New</option>
-        </select>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Transmission
+              </label>
+              <select
+                value={form.transmission}
+                onChange={(e) => updateField("transmission", e.target.value)}
+                className={inputClasses}
+              >
+                <option>Automatic</option>
+                <option>Manual</option>
+              </select>
+            </div>
 
-        <textarea
-          placeholder="Car description"
-          value={form.description}
-          onChange={(e) => updateField("description", e.target.value)}
-          rows={4}
-          style={{ width: "100%", marginTop: 10 }}
-        />
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Condition
+              </label>
+              <select
+                value={form.condition}
+                onChange={(e) => updateField("condition", e.target.value)}
+                className={inputClasses}
+              >
+                <option>Used</option>
+                <option>New</option>
+              </select>
+            </div>
+          </div>
 
-        {/* FEATURES */}
-        <h3 style={{ marginTop: 20 }}>Features</h3>
-        {FEATURE_OPTIONS.map((f) => (
-          <label key={f} style={{ display: "block" }}>
-            <input
-              type="checkbox"
-              checked={features.includes(f)}
-              onChange={() => toggleFeature(f)}
-            />{" "}
-            {f}
-          </label>
-        ))}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Car Description
+            </label>
+            <textarea
+              placeholder="Tell us about the car..."
+              value={form.description}
+              onChange={(e) => updateField("description", e.target.value)}
+              rows={4}
+              className={inputClasses}
+            />
+          </div>
 
-        <textarea
-          placeholder="Additional / custom features (optional)"
-          value={form.extraFeatures}
-          onChange={(e) => updateField("extraFeatures", e.target.value)}
-          rows={3}
-          style={{ width: "100%", marginTop: 10 }}
-        />
+          <div className="border-t border-gray-200 pt-6">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Features</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              {FEATURE_OPTIONS.map((f) => (
+                <label key={f} className="inline-flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={features.includes(f)}
+                    onChange={() => toggleFeature(f)}
+                    className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                  />
+                  <span className="text-sm text-gray-700">{f}</span>
+                </label>
+              ))}
+            </div>
+            <div className="mt-4">
+              <label className="block text-sm font-medium text-gray-700">
+                Additional / custom features (optional)
+              </label>
+              <textarea
+                placeholder="List any extra features..."
+                value={form.extraFeatures}
+                onChange={(e) => updateField("extraFeatures", e.target.value)}
+                rows={3}
+                className={inputClasses}
+              />
+            </div>
+          </div>
 
-        {/* IMAGES */}
-        <h3 style={{ marginTop: 20 }}>Car Images (URLs)</h3>
+          <div className="border-t border-gray-200 pt-6">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">
+              Car Images (URLs)
+            </h3>
+            <div className="space-y-3">
+              {imageUrls.map((url, i) => (
+                <input
+                  key={i}
+                  placeholder={`Image ${i + 1} URL`}
+                  value={url}
+                  onChange={(e) => updateImage(i, e.target.value)}
+                  className={inputClasses}
+                />
+              ))}
+            </div>
+            <button
+              type="button"
+              onClick={addImageField}
+              className="mt-3 inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-sm font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              ➕ Add another image
+            </button>
+          </div>
 
-        {imageUrls.map((url, i) => (
-          <input
-            key={i}
-            placeholder={`Image ${i + 1} URL`}
-            value={url}
-            onChange={(e) => updateImage(i, e.target.value)}
-            style={{ width: "100%", padding: 10, marginTop: 10 }}
-          />
-        ))}
-
-        <button
-          type="button"
-          onClick={addImageField}
-          style={{ marginTop: 10 }}
-        >
-          ➕ Add another image
-        </button>
-
-        <button
-          disabled={loading}
-          style={{ marginTop: 20, padding: 12 }}
-        >
-          {loading ? "Saving..." : "Save Car"}
-        </button>
-      </form>
+          <div className="pt-6">
+            <button
+              disabled={loading}
+              className="w-full inline-flex justify-center py-3 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 transition-colors"
+            >
+              {loading ? "Saving..." : "Save Car"}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   )
 }
