@@ -3,6 +3,7 @@
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { supabase } from "@/lib/supabaseClient"
+import "./globals.css"
 
 export default function SafranLayout({
   children,
@@ -19,5 +20,9 @@ export default function SafranLayout({
     })
   }, [router])
 
-  return <>{children}</>
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  )
 }

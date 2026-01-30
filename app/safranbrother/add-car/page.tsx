@@ -117,7 +117,7 @@ export default function AddCarPage() {
           <input
             key={key}
             placeholder={label}
-            value={(form as any)[key]}
+            value={form[key as keyof typeof form]}
             onChange={(e) => updateField(key, e.target.value)}
             required
             style={{ width: "100%", padding: 10, marginTop: 10 }}

@@ -1,25 +1,25 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { supabaseBrowser } from "@/lib/supabaseBrowser"
 
 export default function Dashboard() {
   const router = useRouter()
-  const [cars, setCars] = useState<any[]>([])
+  const [cars, setCars] = useState<any[]>([]) // eslint-disable-line @typescript-eslint/no-explicit-any
 
-  async function loadCars() {
+  const loadCars = useCallback(async () => {
     const { data } = await supabaseBrowser
       .from("cars")
       .select("*")
       .order("created_at", { ascending: false })
 
     setCars(data || [])
-  }
+  }, [])
 
   useEffect(() => {
-    loadCars()
-  }, [])
+    void loadCars() // eslint-disable-line react-hooks/set-state-in-effect
+  }, [loadCars])
 
   async function deleteCar(id: string) {
     const ok = confirm("⚠️ Permanently delete this car? This cannot be undone.")
