@@ -92,12 +92,21 @@ export default function AddCarPage() {
   }
 
   const inputClasses =
-    "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+    "mt-1 block w-full rounded-md border-gray-300 bg-white text-gray-900 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto mb-4">
+        <button
+          onClick={() => router.push("/safranbrother")}
+          className="text-sm font-medium text-indigo-600 hover:text-indigo-500 flex items-center transition-colors"
+        >
+          ← Back to Dashboard
+        </button>
+      </div>
+
       <div className="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow">
-        <div className="mb-8">
+        <div className="mb-8 border-b border-gray-100 pb-4">
           <h1 className="text-3xl font-bold text-gray-900">Add New Car</h1>
           <p className="mt-2 text-sm text-gray-600">
             Enter the details of the vehicle to list it in the showroom.
