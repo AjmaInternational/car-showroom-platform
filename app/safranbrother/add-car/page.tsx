@@ -16,7 +16,7 @@ export default function AddCarPage() {
     mileage: "",
     fuel: "Petrol",
     transmission: "Automatic",
-    condition: "Used",
+    condition: "Pre-owned",
     color: "",
     price: "",
     location: "",
@@ -186,7 +186,7 @@ export default function AddCarPage() {
                 onChange={(e) => updateField("condition", e.target.value)}
                 className={inputClasses}
               >
-                <option>Used</option>
+                <option>Pre-owned</option>
                 <option>New</option>
               </select>
             </div>

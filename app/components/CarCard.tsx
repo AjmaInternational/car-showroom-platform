@@ -9,6 +9,7 @@ type CarCardProps = {
     price: number
     year: number
     mileage: number
+    transmission: string
     image_urls: string[] | null
     status: string
     location: string
@@ -59,7 +60,7 @@ export default function CarCard({ car }: CarCardProps) {
           </div>
           <div className="space-y-1 text-right">
             <span className="text-brand-silver/30 block uppercase tracking-[0.2em] text-[8px] font-bold">Transmission</span>
-            <span className="text-brand-silver text-xs font-bold tracking-tight">Automatic</span>
+            <span className="text-brand-silver text-xs font-bold tracking-tight">{car.transmission || 'Automatic'}</span>
           </div>
         </div>
 

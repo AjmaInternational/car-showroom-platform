@@ -15,6 +15,7 @@ type Car = {
   price: number
   year: number
   mileage: number
+  transmission: string
   color: string
   location: string
   image_urls: string[] | null
@@ -29,7 +30,7 @@ export default function HomePage() {
     const { data } = await supabaseBrowser
       .from("cars")
       .select("*")
-      .ilike("status", "available")
+      .or("status.ilike.available,status.is.null")
       .order("created_at", { ascending: false })
       .limit(3)
 

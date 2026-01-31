@@ -20,6 +20,8 @@ export default function EditCarPage() {
     color: "",
     price: "",
     location: "",
+    status: "",
+    condition: "",
   })
 
   function update(key: string, value: string) {
@@ -47,6 +49,8 @@ export default function EditCarPage() {
         color: data.color ?? "",
         price: data.price?.toString() ?? "",
         location: data.location ?? "",
+        status: data.status ?? "",
+        condition: data.condition ?? "",
       })
 
       setLoading(false)
@@ -69,6 +73,8 @@ export default function EditCarPage() {
       color: form.color,
       price: Number(form.price),
       location: form.location,
+      status: form.status,
+      condition: form.condition,
     }).eq("id", id)
 
     if (error) {
@@ -122,6 +128,8 @@ export default function EditCarPage() {
               ["color", "Color"],
               ["price", "Price (£)"],
               ["location", "Location"],
+              ["status", "Status (available/sold)"],
+              ["condition", "Condition"],
             ].map(([k, label]) => (
               <div key={k}>
                 <label className="block text-sm font-medium text-gray-700">
