@@ -19,59 +19,55 @@ export default function CarCard({ car }: CarCardProps) {
   const mainImage = car.image_urls?.[0] || "/placeholder-car.jpg"
 
   return (
-    <div className="group bg-brand-blue rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-brand-navy/20">
+    <div className="group relative bg-brand-navy border border-brand-blue/30 rounded-sm overflow-hidden transition-all duration-700 hover:shadow-[0_20px_50px_rgba(245,124,0,0.1)] hover:-translate-y-2">
       <Link href={`/cars/${car.id}`}>
-        <div className="relative aspect-[16/9] overflow-hidden bg-brand-navy">
+        <div className="relative aspect-[16/10] overflow-hidden">
+          <div className="absolute inset-0 bg-brand-navy/20 group-hover:bg-transparent transition-colors duration-700 z-10" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={mainImage}
-            alt={`${car.year} ${car.brand} ${car.model} UK`}
-            className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
+            alt={`${car.year} ${car.brand} ${car.model}`}
+            className="object-cover w-full h-full transition-transform duration-[1.5s] group-hover:scale-110 grayscale-[30%] group-hover:grayscale-0"
             loading="lazy"
           />
-          <div className="absolute top-4 left-4">
-            <span className="bg-brand-orange text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow-lg">
-              {car.status}
-            </span>
-          </div>
-          <div className="absolute bottom-4 right-4">
-            <span className="bg-brand-navy/80 backdrop-blur-md text-brand-silver text-lg font-bold px-3 py-1 rounded border border-brand-blue">
-              £{car.price.toLocaleString()}
+          <div className="absolute top-6 left-6 z-20">
+            <span className="bg-brand-orange/90 backdrop-blur-md text-white text-[8px] font-black uppercase tracking-[0.3em] px-4 py-2 rounded-sm">
+              {car.status === 'available' ? 'In Showroom' : car.status}
             </span>
           </div>
         </div>
       </Link>
 
-      <div className="p-6">
-        <div className="flex justify-between items-start mb-2">
-          <div>
-            <h3 className="text-brand-silver font-bold text-lg leading-tight group-hover:text-brand-orange transition-colors">
-              {car.brand} {car.model}
-            </h3>
-            <p className="text-brand-grey text-xs mt-1 uppercase tracking-wider">{car.year} • {car.location}</p>
+      <div className="p-8">
+        <div className="mb-6">
+          <div className="flex justify-between items-end mb-2">
+             <span className="text-brand-orange text-[10px] font-bold uppercase tracking-[0.2em]">{car.brand}</span>
+             <span className="text-brand-silver font-black text-xl italic tracking-tighter group-hover:text-brand-orange transition-colors duration-500">
+               £{car.price.toLocaleString()}
+             </span>
           </div>
+          <h3 className="text-brand-white font-bold text-2xl tracking-tight leading-none group-hover:tracking-wide transition-all duration-500">
+            {car.model}
+          </h3>
+          <p className="text-brand-silver/30 text-[10px] mt-2 uppercase tracking-widest font-medium">Showroom Collection • {car.year}</p>
         </div>
 
-        <p className="text-brand-grey text-sm line-clamp-1 mb-4">
-          {car.title}
-        </p>
-
-        <div className="grid grid-cols-2 gap-4 pt-4 border-t border-brand-navy/30">
-          <div className="text-xs">
-            <span className="text-brand-grey block uppercase tracking-tighter mb-1">Mileage</span>
-            <span className="text-brand-silver font-medium">{car.mileage.toLocaleString()} miles</span>
+        <div className="grid grid-cols-2 gap-8 py-6 border-t border-brand-blue/30">
+          <div className="space-y-1">
+            <span className="text-brand-silver/30 block uppercase tracking-[0.2em] text-[8px] font-bold">Mileage</span>
+            <span className="text-brand-silver text-xs font-bold tracking-tight">{car.mileage.toLocaleString()} miles</span>
           </div>
-          <div className="text-xs text-right">
-            <span className="text-brand-grey block uppercase tracking-tighter mb-1">Transmission</span>
-            <span className="text-brand-silver font-medium">Automatic</span>
+          <div className="space-y-1 text-right">
+            <span className="text-brand-silver/30 block uppercase tracking-[0.2em] text-[8px] font-bold">Transmission</span>
+            <span className="text-brand-silver text-xs font-bold tracking-tight">Automatic</span>
           </div>
         </div>
 
         <Link
           href={`/cars/${car.id}`}
-          className="mt-6 block w-full text-center border border-brand-orange text-brand-orange hover:bg-brand-orange hover:text-white py-3 rounded font-bold text-sm transition-all uppercase tracking-widest"
+          className="mt-4 block w-full text-center border border-brand-silver/10 text-brand-silver hover:bg-brand-orange hover:border-brand-orange hover:text-white py-4 rounded-sm font-bold text-[10px] transition-all duration-500 uppercase tracking-[0.3em]"
         >
-          View Details
+          View Presentation
         </Link>
       </div>
     </div>

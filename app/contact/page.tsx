@@ -1,102 +1,124 @@
+"use client"
+
+import { useEffect } from "react"
 import Header from "../components/Header"
 import Footer from "../components/Footer"
-import { Metadata } from "next"
-
-export const metadata: Metadata = {
-  title: "Contact Us | R.S Lanka Motors - UK Car Dealership",
-  description: "Get in touch with R.S Lanka Motors for any inquiries regarding used or brand new cars in the UK. Contact us via phone, WhatsApp, or our contact form.",
-}
 
 export default function ContactPage() {
-  const orgSchema = {
-    "@context": "https://schema.org",
-    "@type": "AutoDealer",
-    "name": "R.S Lanka Motors",
-    "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70",
-    "address": {
-      "@type": "PostalAddress",
-      "addressCountry": "UK"
-    },
-    "url": "https://rslankamotors.com"
-  }
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('active')
+      })
+    }, { threshold: 0.1 })
+
+    const revealElements = document.querySelectorAll('.reveal')
+    revealElements.forEach(el => observer.observe(el))
+
+    return () => observer.disconnect()
+  }, [])
 
   return (
     <div className="flex flex-col min-h-screen">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
-      />
       <Header />
 
       <main className="flex-grow bg-brand-navy">
-        <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <span className="text-brand-orange font-bold uppercase tracking-[0.3em] text-sm mb-4 block">Get In Touch</span>
-            <h1 className="text-4xl md:text-6xl font-bold text-brand-silver tracking-tighter mb-6">
-              Contact <span className="text-brand-orange">R.S Lanka Motors</span>
+        {/* HERO */}
+        <section className="relative pt-64 pb-32 overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <span className="text-brand-orange font-bold uppercase tracking-[0.4em] text-[10px] mb-6 block animate-fade-up">Get In Touch</span>
+            <h1 className="text-5xl md:text-8xl font-black text-brand-white tracking-tighter leading-none mb-10 animate-fade-up [animation-delay:200ms]">
+              Connect with <br /> <span className="text-brand-orange italic">Our Consultants</span>
             </h1>
-            <p className="text-brand-grey max-w-2xl mx-auto italic">
-              Our team is ready to assist you with your next car purchase. Reach out to us for any questions.
+            <p className="text-brand-silver/50 max-w-2xl text-xl italic animate-fade-up [animation-delay:400ms]">
+              Our professional team is available to assist you with inquiries, appointments, and personal vehicle consultations.
             </p>
           </div>
+        </section>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <div className="md:col-span-1 space-y-8">
-              <div className="bg-brand-blue p-8 rounded-2xl border border-brand-silver/5 shadow-xl">
-                 <h3 className="text-brand-silver font-bold uppercase tracking-widest text-sm mb-6 border-b border-brand-navy pb-4">Contact Details</h3>
-                 <div className="space-y-6">
-                   <div>
-                     <span className="text-brand-grey text-[10px] uppercase tracking-widest block mb-1">WhatsApp</span>
-                     <a href="#" className="text-brand-silver font-bold text-lg hover:text-brand-orange transition-colors italic tracking-tighter">Click to Chat</a>
+        {/* CONTACT GRID */}
+        <section className="py-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-24">
+            <div className="lg:col-span-1 space-y-16 reveal">
+              <div>
+                <h3 className="text-brand-orange font-bold uppercase tracking-[0.3em] text-[10px] mb-8 border-b border-brand-blue/50 pb-4">Contact Channels</h3>
+                <div className="space-y-12">
+                   <div className="group">
+                     <span className="text-brand-silver/30 text-[8px] uppercase tracking-[0.4em] block mb-2 font-black">Direct WhatsApp</span>
+                     <a href="https://wa.me/" target="_blank" rel="noopener noreferrer" className="text-brand-white font-bold text-2xl group-hover:text-brand-orange transition-colors duration-500 italic tracking-tighter">Instant Consultation</a>
                    </div>
-                   <div>
-                     <span className="text-brand-grey text-[10px] uppercase tracking-widest block mb-1">Email</span>
-                     <p className="text-brand-silver font-bold text-lg italic tracking-tighter">info@rslankamotors.com</p>
+                   <div className="group">
+                     <span className="text-brand-silver/30 text-[8px] uppercase tracking-[0.4em] block mb-2 font-black">Email Correspondence</span>
+                     <p className="text-brand-white font-bold text-2xl group-hover:text-brand-orange transition-colors duration-500 italic tracking-tighter">info@rslankamotors.com</p>
                    </div>
-                   <div>
-                     <span className="text-brand-grey text-[10px] uppercase tracking-widest block mb-1">Location</span>
-                     <p className="text-brand-silver font-bold italic tracking-tighter">United Kingdom</p>
+                   <div className="group">
+                     <span className="text-brand-silver/30 text-[8px] uppercase tracking-[0.4em] block mb-2 font-black">Showroom Location</span>
+                     <p className="text-brand-white font-bold text-2xl italic tracking-tighter">United Kingdom</p>
                    </div>
-                 </div>
+                </div>
               </div>
 
-              <div className="bg-brand-orange/10 p-8 rounded-2xl border border-brand-orange/20 shadow-xl">
-                 <h3 className="text-brand-orange font-bold uppercase tracking-widest text-sm mb-4">Opening Hours</h3>
-                 <div className="space-y-3 text-brand-silver text-sm font-medium italic tracking-tighter">
-                    <p className="flex justify-between"><span>Mon - Fri:</span> <span>09:00 - 18:00</span></p>
-                    <p className="flex justify-between"><span>Saturday:</span> <span>10:00 - 16:00</span></p>
-                    <p className="flex justify-between text-brand-grey"><span>Sunday:</span> <span>By Appointment</span></p>
+              <div className="p-10 bg-brand-blue/20 border border-brand-blue/50 rounded-sm">
+                 <h3 className="text-brand-white font-bold uppercase tracking-[0.2em] text-[10px] mb-8">Showroom Hours</h3>
+                 <div className="space-y-4 text-xs font-bold italic tracking-tight text-brand-silver/60">
+                    <p className="flex justify-between border-b border-brand-blue/30 pb-4"><span>Mon - Fri</span> <span className="text-brand-silver">09:00 - 18:00</span></p>
+                    <p className="flex justify-between border-b border-brand-blue/30 pb-4"><span>Saturday</span> <span className="text-brand-silver">10:00 - 16:00</span></p>
+                    <p className="flex justify-between text-brand-silver/20"><span>Sunday</span> <span>By Appointment</span></p>
                  </div>
               </div>
             </div>
 
-            <div className="md:col-span-2 bg-brand-blue p-8 md:p-12 rounded-2xl border border-brand-silver/5 shadow-xl">
-               <h3 className="text-brand-silver font-bold uppercase tracking-widest text-sm mb-8 border-b border-brand-navy pb-4 italic tracking-tighter">Send us a message</h3>
-               <form className="space-y-6">
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                   <div className="space-y-2">
-                     <label className="text-brand-grey text-[10px] uppercase tracking-widest font-bold">Your Name</label>
-                     <input type="text" className="w-full bg-brand-navy border border-brand-silver/10 rounded-lg px-4 py-3 text-brand-silver outline-none focus:border-brand-orange transition-all" placeholder="John Doe" />
-                   </div>
-                   <div className="space-y-2">
-                     <label className="text-brand-grey text-[10px] uppercase tracking-widest font-bold">Email Address</label>
-                     <input type="email" className="w-full bg-brand-navy border border-brand-silver/10 rounded-lg px-4 py-3 text-brand-silver outline-none focus:border-brand-orange transition-all" placeholder="john@example.com" />
-                   </div>
-                 </div>
-                 <div className="space-y-2">
-                   <label className="text-brand-grey text-[10px] uppercase tracking-widest font-bold">Subject</label>
-                   <input type="text" className="w-full bg-brand-navy border border-brand-silver/10 rounded-lg px-4 py-3 text-brand-silver outline-none focus:border-brand-orange transition-all" placeholder="Inquiry about BMW 3 Series" />
-                 </div>
-                 <div className="space-y-2">
-                   <label className="text-brand-grey text-[10px] uppercase tracking-widest font-bold">Message</label>
-                   <textarea rows={5} className="w-full bg-brand-navy border border-brand-silver/10 rounded-lg px-4 py-3 text-brand-silver outline-none focus:border-brand-orange transition-all resize-none" placeholder="How can we help you?"></textarea>
-                 </div>
-                 <button className="w-full bg-brand-orange hover:bg-orange-600 text-white font-bold py-4 rounded-xl transition-all shadow-lg hover:shadow-orange-500/20 uppercase text-xs tracking-[0.3em]">
-                   Send Message
-                 </button>
-               </form>
+            <div className="lg:col-span-2 reveal [transition-delay:200ms]">
+               <div className="bg-brand-blue/10 p-12 md:p-16 rounded-sm border border-brand-blue/30 relative">
+                  <div className="absolute top-0 right-0 p-8">
+                     <span className="text-brand-orange font-black text-6xl opacity-5 italic select-none">RS</span>
+                  </div>
+                  <h3 className="text-brand-white font-bold uppercase tracking-[0.3em] text-[10px] mb-12 border-b border-brand-blue/50 pb-4">Secure Message</h3>
+                  <form className="space-y-10">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                      <div className="space-y-3">
+                        <label className="text-brand-silver/30 text-[8px] uppercase tracking-[0.4em] font-black">Full Name</label>
+                        <input type="text" className="w-full bg-brand-navy border-b border-brand-blue/50 rounded-none px-0 py-4 text-brand-silver outline-none focus:border-brand-orange transition-all duration-500 placeholder:text-brand-silver/10" placeholder="e.g. Alexander Smith" />
+                      </div>
+                      <div className="space-y-3">
+                        <label className="text-brand-silver/30 text-[8px] uppercase tracking-[0.4em] font-black">Electronic Mail</label>
+                        <input type="email" className="w-full bg-brand-navy border-b border-brand-blue/50 rounded-none px-0 py-4 text-brand-silver outline-none focus:border-brand-orange transition-all duration-500 placeholder:text-brand-silver/10" placeholder="e.g. alex@company.com" />
+                      </div>
+                    </div>
+                    <div className="space-y-3">
+                      <label className="text-brand-silver/30 text-[8px] uppercase tracking-[0.4em] font-black">Vehicle of Interest (Optional)</label>
+                      <input type="text" className="w-full bg-brand-navy border-b border-brand-blue/50 rounded-none px-0 py-4 text-brand-silver outline-none focus:border-brand-orange transition-all duration-500 placeholder:text-brand-silver/10" placeholder="e.g. Range Rover Autobiography" />
+                    </div>
+                    <div className="space-y-3">
+                      <label className="text-brand-silver/30 text-[8px] uppercase tracking-[0.4em] font-black">Message Content</label>
+                      <textarea rows={6} className="w-full bg-brand-navy border-b border-brand-blue/50 rounded-none px-0 py-4 text-brand-silver outline-none focus:border-brand-orange transition-all duration-500 resize-none placeholder:text-brand-silver/10" placeholder="How can our consultants assist you today?"></textarea>
+                    </div>
+                    <button className="w-full bg-brand-orange hover:bg-orange-600 text-white font-black py-6 rounded-sm transition-all duration-500 shadow-2xl shadow-orange-500/20 uppercase text-[10px] tracking-[0.4em]">
+                      Send Secure Message
+                    </button>
+                  </form>
+               </div>
             </div>
           </div>
+        </section>
+
+        {/* MAP PLACEHOLDER */}
+        <section className="py-32 reveal">
+           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="h-[500px] bg-brand-blue/20 rounded-sm border border-brand-blue/50 flex flex-col items-center justify-center relative overflow-hidden group">
+                 <div className="absolute inset-0 grayscale group-hover:grayscale-0 transition-all duration-[2s] opacity-40">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=1920" className="w-full h-full object-cover" alt="Map Area" />
+                 </div>
+                 <div className="relative z-10 text-center">
+                    <div className="w-20 h-20 rounded-full border border-brand-orange flex items-center justify-center mb-8 mx-auto animate-pulse">
+                       <div className="w-4 h-4 rounded-full bg-brand-orange" />
+                    </div>
+                    <h4 className="text-brand-white font-bold text-2xl tracking-tighter mb-4">Visit Our Showroom</h4>
+                    <p className="text-brand-silver/40 text-[10px] uppercase tracking-[0.4em] font-black">United Kingdom • By Appointment Only</p>
+                 </div>
+              </div>
+           </div>
         </section>
       </main>
 

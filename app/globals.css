@@ -1,37 +1,95 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-brand-navy: #0E2238;
-  --color-brand-blue: #1F3B5C;
-  --color-brand-orange: #F28C28;
-  --color-brand-silver: #F5F7FA;
-  --color-brand-grey: #9AA4AF;
+  --color-brand-navy: #0B1E3B;
+  --color-brand-blue: #142C4D;
+  --color-brand-orange: #F57C00;
+  --color-brand-silver: #E5E7EB;
+  --color-brand-white: #FFFFFF;
 
   --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-heading: 'Plus Jakarta Sans', 'Inter', sans-serif;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  --animate-fade-up: fade-up 0.8s ease-out forwards;
+  --animate-fade-in: fade-in 1.2s ease-out forwards;
 }
 
 :root {
-  --background: #0E2238;
-  --foreground: #F5F7FA;
+  --background: #0B1E3B;
+  --foreground: #E5E7EB;
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
 }
 
 /* Custom scrollbar for luxury feel */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #0E2238;
+  background: #0B1E3B;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1F3B5C;
-  border-radius: 4px;
+  background: #142C4D;
+  border: 2px solid #0B1E3B;
+  border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #F28C28;
+  background: #F57C00;
+}
+
+/* Glass effect utility */
+.glass-effect {
+  background: rgba(11, 30, 59, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(229, 231, 235, 0.1);
+}
+
+/* Reveal on scroll base classes */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease-out;
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Parallax effect base */
+.parallax-bg {
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
