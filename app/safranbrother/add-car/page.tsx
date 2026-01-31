@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { supabaseBrowser } from "@/lib/supabaseBrowser"
+import { supabase as supabaseBrowser } from "@/lib/supabase"
 
 export default function AddCarPage() {
   const router = useRouter()

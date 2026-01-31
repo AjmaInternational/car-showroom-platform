@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState, useCallback } from "react"
-import { supabaseBrowser } from "@/lib/supabaseBrowser"
+import { supabase as supabaseBrowser } from "@/lib/supabase"
 import Header from "../components/Header"
 import Footer from "../components/Footer"
 import CarCard from "../components/CarCard"
@@ -32,7 +32,7 @@ export default function CarsPage() {
     let query = supabaseBrowser
       .from("cars")
       .select("*")
-      .eq("status", "available")
+      .ilike("status", "available")
       .order("created_at", { ascending: false })
 
     if (filterBrand) {
@@ -75,11 +75,11 @@ export default function CarsPage() {
 
       <main className="flex-grow bg-brand-navy pb-32">
         {/* HERO / HEADER */}
-        <section className="relative pt-48 pb-32 overflow-hidden">
+        <section className="relative pt-32 md:pt-48 pb-16 md:pb-32 overflow-hidden">
           <div className="absolute inset-0 bg-brand-blue/20 -skew-y-3 origin-right translate-y-20" />
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <span className="text-brand-orange font-bold uppercase tracking-[0.4em] text-[10px] mb-6 block animate-fade-up">Available Inventory</span>
-            <h1 className="text-5xl md:text-7xl font-black text-brand-white mb-8 tracking-tighter leading-none animate-fade-up [animation-delay:200ms]">
+            <h1 className="text-4xl md:text-7xl font-black text-brand-white mb-8 tracking-tighter leading-none animate-fade-up [animation-delay:200ms]">
               Showroom <span className="text-brand-orange italic">Collection</span>
             </h1>
             <p className="text-brand-silver/50 max-w-2xl text-lg leading-relaxed animate-fade-up [animation-delay:400ms]">
@@ -89,7 +89,7 @@ export default function CarsPage() {
         </section>
 
         {/* FILTERS */}
-        <section className="sticky top-[80px] z-40 glass-effect border-y border-brand-blue/50 py-8 mb-16">
+        <section className="md:sticky md:top-[80px] z-40 glass-effect border-y border-brand-blue/50 py-8 mb-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
               <div className="space-y-2">

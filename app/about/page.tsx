@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
+import Link from "next/link"
 import Header from "../components/Header"
 import Footer from "../components/Footer"
 
@@ -24,21 +25,21 @@ export default function AboutPage() {
 
       <main className="flex-grow bg-brand-navy">
         {/* HERO */}
-        <section className="relative pt-64 pb-32 overflow-hidden bg-brand-blue/10">
+        <section className="relative pt-32 md:pt-64 pb-16 md:pb-32 overflow-hidden bg-brand-blue/10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
             <span className="text-brand-orange font-bold uppercase tracking-[0.4em] text-[10px] mb-6 block animate-fade-up">Our Story</span>
-            <h1 className="text-5xl md:text-8xl font-black text-brand-white mb-10 tracking-tighter leading-none animate-fade-up [animation-delay:200ms]">
+            <h1 className="text-4xl md:text-8xl font-black text-brand-white mb-10 tracking-tighter leading-none animate-fade-up [animation-delay:200ms]">
               A Legacy of <br /> <span className="text-brand-orange italic">Automotive Excellence</span>
             </h1>
-            <p className="text-brand-silver/50 max-w-3xl mx-auto text-xl leading-relaxed italic animate-fade-up [animation-delay:400ms]">
+            <p className="text-brand-silver/50 max-w-3xl mx-auto text-lg md:text-xl leading-relaxed italic animate-fade-up [animation-delay:400ms] px-4">
               Serving the UK automotive market with passion, integrity, and an unwavering commitment to quality presentation and professional service.
             </p>
           </div>
         </section>
 
         {/* CONTENT 1: VISION */}
-        <section className="py-48 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-32 items-center">
+        <section className="py-24 md:py-48 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-32 items-center">
             <div className="reveal">
               <h2 className="text-3xl md:text-5xl font-bold text-brand-white mb-10 tracking-tighter">A Vision for the <span className="text-brand-orange">Modern Showroom</span></h2>
               <div className="space-y-8 text-brand-silver/60 leading-[1.8] text-lg font-medium">
@@ -64,14 +65,14 @@ export default function AboutPage() {
         </section>
 
         {/* CONTENT 2: THE STANDARD */}
-        <section className="py-48 bg-brand-blue/20">
+        <section className="py-24 md:py-48 bg-brand-blue/20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-32 reveal">
+            <div className="text-center max-w-3xl mx-auto mb-20 md:mb-32 reveal">
                <h2 className="text-3xl md:text-5xl font-bold text-brand-white mb-8 tracking-tighter">The R.S Lanka <span className="italic">Standard</span></h2>
-               <p className="text-brand-silver/50 text-lg">Every vehicle that enters our showroom collection must pass a rigorous multi-stage audit.</p>
+               <p className="text-brand-silver/50 text-base md:text-lg px-4">Every vehicle that enters our showroom collection must pass a rigorous multi-stage audit.</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-24">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-24">
                {[
                  { title: "Curated Sourcing", desc: "We only source vehicles with verifiable histories and impeccable maintenance records." },
                  { title: "Technical Integrity", desc: "Our technicians perform a comprehensive audit of every mechanical and electronic system." },
@@ -88,8 +89,8 @@ export default function AboutPage() {
         </section>
 
         {/* STATS / MILESTONES */}
-        <section className="py-48 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-16 text-center">
+        <section className="py-24 md:py-48 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-16 text-center">
             {[
               { label: "Years in Showroom", value: "10+" },
               { label: "Premium Deliveries", value: "5000+" },
@@ -105,16 +106,16 @@ export default function AboutPage() {
         </section>
 
         {/* CTA */}
-        <section className="py-48 bg-brand-orange relative overflow-hidden">
+        <section className="py-24 md:py-48 bg-brand-orange relative overflow-hidden">
            <div className="absolute inset-0 bg-brand-navy opacity-10 -skew-x-12 translate-x-1/2" />
-           <div className="max-w-4xl mx-auto px-4 relative z-10 text-center reveal">
+           <div className="max-w-4xl mx-auto px-4 relative z-10 text-center reveal active">
               <h2 className="text-4xl md:text-6xl font-black text-white mb-12 tracking-tighter leading-none">Experience the <br /> Showroom Difference</h2>
-              <button
-                onClick={() => window.location.href = '/cars'}
-                className="bg-brand-navy text-white px-16 py-6 rounded-sm font-bold uppercase tracking-[0.3em] text-xs hover:bg-brand-blue transition-all duration-500 shadow-2xl"
+              <Link
+                href="/cars"
+                className="inline-block bg-brand-navy text-white px-8 md:px-16 py-6 rounded-sm font-bold uppercase tracking-[0.3em] text-xs hover:bg-brand-blue transition-all duration-500 shadow-2xl"
               >
                 View Collection
-              </button>
+              </Link>
            </div>
         </section>
       </main>

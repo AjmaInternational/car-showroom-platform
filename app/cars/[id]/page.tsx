@@ -1,4 +1,4 @@
-import { supabaseBrowser } from "@/lib/supabaseBrowser"
+import { supabase as supabaseBrowser } from "@/lib/supabase"
 import Header from "../../components/Header"
 import Footer from "../../components/Footer"
 import { Metadata } from "next"
@@ -66,20 +66,20 @@ export default async function CarDetailPage({ params }: { params: Promise<{ id: 
 
       <main className="flex-grow bg-brand-navy pb-32">
         {/* TOP SECTION: HERO & TITLE */}
-        <section className="relative pt-48 pb-20 overflow-hidden">
+        <section className="relative pt-32 md:pt-48 pb-10 md:pb-20 overflow-hidden">
           <div className="absolute inset-0 bg-brand-blue/10 skew-y-3 origin-left translate-y-40" />
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="flex flex-col md:flex-row justify-between items-end gap-8 mb-12">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 mb-12">
               <div className="animate-fade-up">
                 <span className="text-brand-orange font-bold uppercase tracking-[0.4em] text-[10px] mb-4 block">Showroom Collection</span>
-                <h1 className="text-5xl md:text-7xl font-black text-brand-white tracking-tighter leading-none mb-4">
+                <h1 className="text-4xl md:text-7xl font-black text-brand-white tracking-tighter leading-none mb-4">
                   {car.brand} <span className="text-brand-orange italic">{car.model}</span>
                 </h1>
-                <p className="text-brand-silver/40 text-sm uppercase tracking-[0.3em] font-medium">{car.year} • {car.location}</p>
+                <p className="text-brand-silver/40 text-[10px] md:text-sm uppercase tracking-[0.3em] font-medium">{car.year} • {car.location}</p>
               </div>
-              <div className="animate-fade-up [animation-delay:200ms] text-right">
+              <div className="animate-fade-up [animation-delay:200ms] md:text-right">
                 <span className="text-brand-silver/30 text-[10px] uppercase tracking-[0.3em] font-black block mb-2">Refined Price</span>
-                <span className="text-5xl font-black text-brand-white italic tracking-tighter">£{car.price.toLocaleString()}</span>
+                <span className="text-3xl md:text-5xl font-black text-brand-white italic tracking-tighter">£{(car.price ?? 0).toLocaleString()}</span>
               </div>
             </div>
           </div>
@@ -143,7 +143,7 @@ export default async function CarDetailPage({ params }: { params: Promise<{ id: 
                 <h3 className="text-[10px] font-black text-brand-white uppercase tracking-[0.4em] mb-10 border-b border-brand-blue/50 pb-4">Technical Specs</h3>
                 <div className="space-y-8">
                   {[
-                    { label: "Mileage", value: `${car.mileage.toLocaleString()} miles` },
+                    { label: "Mileage", value: `${(car.mileage ?? 0).toLocaleString()} miles` },
                     { label: "Fuel Type", value: car.fuel },
                     { label: "Transmission", value: car.transmission },
                     { label: "Exterior Color", value: car.color },
@@ -186,7 +186,7 @@ export default async function CarDetailPage({ params }: { params: Promise<{ id: 
       </main>
 
       {/* STICKY MOBILE CTA */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 glass-effect border-t border-brand-blue/50 p-6 flex space-x-4">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 glass-effect border-t border-brand-blue/50 p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] flex space-x-4">
           <a
             href={`https://wa.me/?text=Interested in ${car.brand} ${car.model}`}
             className="flex-1 bg-brand-orange text-white py-4 rounded-sm font-bold text-center text-[10px] uppercase tracking-[0.3em]"

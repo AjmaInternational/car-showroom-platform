@@ -43,7 +43,7 @@ export default function CarCard({ car }: CarCardProps) {
           <div className="flex justify-between items-end mb-2">
              <span className="text-brand-orange text-[10px] font-bold uppercase tracking-[0.2em]">{car.brand}</span>
              <span className="text-brand-silver font-black text-xl italic tracking-tighter group-hover:text-brand-orange transition-colors duration-500">
-               £{car.price.toLocaleString()}
+               £{(car.price ?? 0).toLocaleString()}
              </span>
           </div>
           <h3 className="text-brand-white font-bold text-2xl tracking-tight leading-none group-hover:tracking-wide transition-all duration-500">
@@ -55,7 +55,7 @@ export default function CarCard({ car }: CarCardProps) {
         <div className="grid grid-cols-2 gap-8 py-6 border-t border-brand-blue/30">
           <div className="space-y-1">
             <span className="text-brand-silver/30 block uppercase tracking-[0.2em] text-[8px] font-bold">Mileage</span>
-            <span className="text-brand-silver text-xs font-bold tracking-tight">{car.mileage.toLocaleString()} miles</span>
+            <span className="text-brand-silver text-xs font-bold tracking-tight">{(car.mileage ?? 0).toLocaleString()} miles</span>
           </div>
           <div className="space-y-1 text-right">
             <span className="text-brand-silver/30 block uppercase tracking-[0.2em] text-[8px] font-bold">Transmission</span>

@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react"
 import Link from "next/link"
-import { supabaseBrowser } from "@/lib/supabaseBrowser"
+import { supabase as supabaseBrowser } from "@/lib/supabase"
 import Header from "./components/Header"
 import Footer from "./components/Footer"
 import CarCard from "./components/CarCard"
@@ -29,7 +29,7 @@ export default function HomePage() {
     const { data } = await supabaseBrowser
       .from("cars")
       .select("*")
-      .eq("status", "available")
+      .ilike("status", "available")
       .order("created_at", { ascending: false })
       .limit(3)
 
@@ -88,7 +88,7 @@ export default function HomePage() {
 
       <main className="flex-grow">
         {/* 1. HERO SECTION */}
-        <section className="relative h-screen flex items-center overflow-hidden">
+        <section className="relative min-h-screen flex items-center pt-24 md:pt-32 overflow-hidden">
           <div className="absolute inset-0 z-0">
             <div className="absolute inset-0 bg-gradient-to-b from-brand-navy/60 via-brand-navy/40 to-brand-navy z-10" />
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -99,29 +99,30 @@ export default function HomePage() {
             />
           </div>
 
-          <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-            <div className="max-w-3xl">
-              <span className="text-brand-orange font-bold uppercase tracking-[0.4em] text-xs mb-6 block animate-fade-up">
-                Excellence in Presentation
+          <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center py-20">
+            <div className="max-w-4xl mx-auto">
+              <span className="text-brand-orange font-bold uppercase tracking-[0.4em] text-[10px] md:text-xs mb-8 block animate-fade-up">
+                Est. 2014 • London Showroom • United Kingdom
               </span>
-              <h1 className="text-5xl md:text-8xl font-black text-brand-white leading-[1.1] mb-8 animate-fade-up [animation-delay:200ms]">
-                A Premium <br /> <span className="text-brand-orange">Automotive</span> <br /> Showroom
+              <h1 className="text-4xl sm:text-6xl md:text-9xl font-black text-brand-white leading-[0.9] mb-10 animate-fade-up [animation-delay:200ms] tracking-tighter uppercase">
+                The <span className="text-brand-orange italic">Showroom</span> <br className="hidden sm:block" /> Collection
               </h1>
-              <p className="text-brand-silver/70 text-lg md:text-xl mb-12 leading-relaxed max-w-xl animate-fade-up [animation-delay:400ms]">
-                Discover a curated collection of world-class vehicles, presented with the professional integrity and attention to detail you deserve.
+              <p className="text-brand-silver/50 text-base sm:text-lg md:text-2xl mb-16 leading-relaxed max-w-2xl mx-auto animate-fade-up [animation-delay:400ms] italic font-medium px-4">
+                Experience the pinnacle of automotive excellence with our meticulously curated collection of world-class vehicles.
               </p>
-              <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 animate-fade-up [animation-delay:600ms]">
+              <div className="flex flex-col sm:flex-row items-center justify-center space-y-6 sm:space-y-0 sm:space-x-8 animate-fade-up [animation-delay:600ms]">
                 <Link
                   href="/cars"
-                  className="bg-brand-orange hover:bg-orange-600 text-white px-12 py-5 rounded-sm font-bold transition-all duration-500 text-center uppercase tracking-widest text-xs shadow-2xl shadow-orange-500/20"
+                  className="group bg-brand-orange hover:bg-orange-600 text-white px-16 py-6 rounded-sm font-bold transition-all duration-500 text-center uppercase tracking-[0.3em] text-[10px] shadow-2xl shadow-orange-500/20 flex items-center space-x-4"
                 >
-                  Explore Collection
+                  <span>Enter Showroom</span>
+                  <span className="w-8 h-px bg-white/30 group-hover:w-12 transition-all duration-500" />
                 </Link>
                 <Link
                   href="/about"
-                  className="bg-white/5 backdrop-blur-md border border-white/10 text-brand-silver hover:bg-white/10 px-12 py-5 rounded-sm font-bold transition-all duration-500 text-center uppercase tracking-widest text-xs"
+                  className="text-brand-silver/60 hover:text-brand-orange transition-all duration-500 text-center uppercase tracking-[0.3em] text-[10px] font-bold border-b border-brand-silver/10 hover:border-brand-orange pb-2"
                 >
-                  Our Vision
+                  Our Vision & Heritage
                 </Link>
               </div>
             </div>
@@ -212,43 +213,31 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 4. SHOWROOM EXPERIENCE */}
-        <section className="py-32 bg-brand-navy">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-24 reveal">
-              <span className="text-brand-orange font-bold uppercase tracking-[0.3em] text-[10px] mb-4 block">Difference in Detail</span>
-              <h2 className="text-4xl md:text-5xl font-bold text-brand-white mb-8 tracking-tighter">The Showroom Experience</h2>
-              <p className="text-brand-silver/60 text-lg leading-relaxed">
-                Experience a level of service and presentation that goes beyond the standard. At R.S Lanka Motors, every detail is managed to ensure your complete satisfaction.
-              </p>
+        {/* 4. THE SHOWROOM STANDARD (From About Page Vibe) */}
+        <section className="py-24 md:py-48 bg-brand-blue/10 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-1/2 h-full bg-brand-orange/[0.02] -skew-x-12 translate-x-1/3" />
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="text-center max-w-3xl mx-auto mb-20 md:mb-32 reveal">
+               <span className="text-brand-orange font-bold uppercase tracking-[0.4em] text-[10px] mb-6 block">The Showroom Difference</span>
+               <h2 className="text-4xl md:text-6xl font-bold text-brand-white mb-8 tracking-tighter">The R.S Lanka <span className="text-brand-orange italic font-black">Standard</span></h2>
+               <p className="text-brand-silver/50 text-lg md:text-xl leading-relaxed italic px-4">&ldquo;Every vehicle in our collection must pass a rigorous multi-stage audit before it earns its place in our showroom.&rdquo;</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
-              {[
-                {
-                  title: "Professional Presentation",
-                  desc: "Each vehicle is presented in immaculate condition, reflecting its true quality and our showroom standards.",
-                  icon: "01"
-                },
-                {
-                  title: "Technical Excellence",
-                  desc: "Comprehensive multi-point inspections and history checks are standard for every vehicle in our collection.",
-                  icon: "02"
-                },
-                {
-                  title: "Personal Consultation",
-                  desc: "Our experienced consultants provide professional, pressure-free guidance tailored to your requirements.",
-                  icon: "03"
-                }
-              ].map((item, idx) => (
-                <div key={idx} className="group reveal" style={{ transitionDelay: `${idx * 200}ms` }}>
-                  <div className="text-5xl font-black text-brand-white/5 mb-8 group-hover:text-brand-orange/20 transition-colors duration-500">
-                    {item.icon}
-                  </div>
-                  <h3 className="text-xl font-bold text-brand-white mb-6 tracking-tight">{item.title}</h3>
-                  <p className="text-brand-silver/50 text-sm leading-relaxed">{item.desc}</p>
-                </div>
-              ))}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-24">
+               {[
+                 { title: "Curated Sourcing", desc: "We only source vehicles with verifiable histories, low ownership, and impeccable maintenance records from trusted networks.", icon: "01" },
+                 { title: "Technical Integrity", desc: "Our specialist technicians perform a comprehensive 150-point audit of every mechanical and electronic system.", icon: "02" },
+                 { title: "Aesthetic Perfection", desc: "Three days of professional detailing and paint correction ensure every car is presented in its absolute best condition.", icon: "03" }
+               ].map((item, i) => (
+                 <div key={i} className="reveal group" style={{ transitionDelay: `${i * 200}ms` }}>
+                    <div className="flex items-center space-x-6 mb-10">
+                       <span className="text-4xl font-black text-brand-orange/20 group-hover:text-brand-orange transition-colors duration-700 italic">{item.icon}</span>
+                       <div className="h-px flex-grow bg-brand-blue/30 group-hover:bg-brand-orange/50 transition-all duration-700" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-brand-white mb-6 tracking-tight uppercase group-hover:text-brand-orange transition-colors duration-500">{item.title}</h3>
+                    <p className="text-brand-silver/40 text-base leading-relaxed font-medium">{item.desc}</p>
+                 </div>
+               ))}
             </div>
           </div>
         </section>

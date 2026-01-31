@@ -1,6 +1,7 @@
 import { Inter, Plus_Jakarta_Sans } from "next/font/google"
 import "./globals.css"
 import { Metadata } from "next"
+import FloatingWhatsApp from "./components/FloatingWhatsApp"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -46,6 +47,7 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${plusJakartaSans.variable}`}>
       <body className="antialiased bg-brand-navy text-brand-silver font-sans">
         {children}
+        <FloatingWhatsApp />
       </body>
     </html>
   )
