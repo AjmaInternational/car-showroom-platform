@@ -1,28 +1,23 @@
-"use client"
-
-import { useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { supabase } from "@/lib/supabaseClient"
+import { Inter } from "next/font/google"
 import "./globals.css"
 
-export default function SafranLayout({
+const inter = Inter({ subsets: ["latin"] })
+
+export const metadata = {
+  title: "R.S Lanka Motors | Premium Used Cars UK",
+  description: "Trusted UK Car Dealer – Quality Used or Brand New Vehicles. Premium Cars for Sale in the UK.",
+}
+
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const router = useRouter()
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      if (!data.session) {
-        router.replace("/safranbrother/login")
-      }
-    })
-  }, [router])
-
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="en" className={inter.className}>
+      <body className="antialiased bg-brand-navy text-brand-silver">
+        {children}
+      </body>
     </html>
   )
 }
