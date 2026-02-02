@@ -26,12 +26,16 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true)
 
   const fetchFeaturedCars = useCallback(async () => {
-    const { data } = await supabaseBrowser
+    const { data, error } = await supabaseBrowser
       .from("cars")
       .select("*")
-      .ilike("status", "available")
+      .not("status", "eq", "sold")
       .order("created_at", { ascending: false })
       .limit(3)
+
+    if (error) {
+      console.error("Supabase Error (Home):", error)
+    }
 
     setCars(data || [])
     setLoading(false)
@@ -93,7 +97,7 @@ export default function HomePage() {
             <div className="absolute inset-0 bg-gradient-to-b from-brand-navy/60 via-brand-navy/40 to-brand-navy z-10" />
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img 
-              src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80&w=1920" 
+              src="/images/bg-image-homepage.jpg"
               className="w-full h-full object-cover scale-110 animate-fade-in" 
               alt="Premium Automotive Showroom" 
             />
@@ -165,7 +169,7 @@ export default function HomePage() {
                 <div className="absolute -inset-4 border border-brand-orange/20 rounded-sm translate-x-8 translate-y-8 -z-10" />
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img 
-                  src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=1000" 
+                  src="/images/chevrolet-car-for-homepage" 
                   className="rounded-sm shadow-2xl w-full grayscale hover:grayscale-0 transition-all duration-1000" 
                   alt="Professional Showroom" 
                 />
@@ -249,7 +253,7 @@ export default function HomePage() {
               <div className="order-2 lg:order-1 reveal">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img 
-                  src="https://images.unsplash.com/photo-1542362567-b055002b9134?auto=format&fit=crop&q=80&w=1000" 
+                  src="/images/selection-process.png" 
                   className="rounded-sm shadow-2xl grayscale" 
                   alt="Vehicle Inspection" 
                 />

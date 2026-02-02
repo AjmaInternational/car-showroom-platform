@@ -32,7 +32,7 @@ export default function CarsPage() {
     let query = supabaseBrowser
       .from("cars")
       .select("*")
-      .ilike("status", "available")
+      .not("status", "eq", "sold")
       .order("created_at", { ascending: false })
 
     if (filterBrand) {
@@ -47,7 +47,10 @@ export default function CarsPage() {
       query = query.gte("year", parseInt(filterYear))
     }
 
-    const { data } = await query
+    const { data, error } = await query
+    if (error) {
+      console.error("Supabase Error (Inventory):", error)
+    }
     setCars(data || [])
     setLoading(false)
   }, [filterBrand, filterPrice, filterYear])

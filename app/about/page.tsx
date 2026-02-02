@@ -56,7 +56,7 @@ export default function AboutPage() {
                <div className="absolute -inset-10 border border-brand-orange/10 -z-10 rotate-3" />
                {/* eslint-disable-next-line @next/next/no-img-element */}
                <img 
-                 src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?auto=format&fit=crop&q=80&w=1000" 
+                 src="/images/about-us-page-image1.jpg" 
                  className="rounded-sm shadow-2xl grayscale" 
                  alt="R.S Lanka Motors Showroom Concept" 
                />
