@@ -1,25 +1,25 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { useRouter } from "next/navigation"
-import { supabaseBrowser } from "@/lib/supabaseBrowser"
+import { supabase as supabaseBrowser } from "@/lib/supabase"
 
 export default function Dashboard() {
   const router = useRouter()
-  const [cars, setCars] = useState<any[]>([])
+  const [cars, setCars] = useState<any[]>([]) // eslint-disable-line @typescript-eslint/no-explicit-any
 
-  async function loadCars() {
+  const loadCars = useCallback(async () => {
     const { data } = await supabaseBrowser
       .from("cars")
       .select("*")
       .order("created_at", { ascending: false })
 
     setCars(data || [])
-  }
+  }, [])
 
   useEffect(() => {
-    loadCars()
-  }, [])
+    void loadCars() // eslint-disable-line react-hooks/set-state-in-effect
+  }, [loadCars])
 
   async function deleteCar(id: string) {
     const ok = confirm("⚠️ Permanently delete this car? This cannot be undone.")
@@ -47,51 +47,123 @@ export default function Dashboard() {
     loadCars()
   }
 
+  async function handleLogout() {
+    await supabaseBrowser.auth.signOut()
+    router.replace("/safranbrother/login")
+  }
+
   return (
-    <div style={{ padding: 40 }}>
-      <h1>Admin Dashboard</h1>
+    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex justify-between items-end mb-8 border-b border-gray-200 pb-4">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+            <p className="mt-1 text-sm text-gray-500">Manage your showroom inventory</p>
+          </div>
+          <div className="flex space-x-3">
+            <button
+              onClick={handleLogout}
+              className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+            >
+              Logout
+            </button>
+            <button
+              onClick={() => router.push("/safranbrother/add-car")}
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+            >
+              + Add New Car
+            </button>
+          </div>
+        </div>
 
-      <button onClick={() => router.push("/safranbrother/add-car")}>
-        + Add New Car
-      </button>
-
-      <table style={{ width: "100%", marginTop: 20 }}>
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Brand</th>
-            <th>Price</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {cars.map((car) => (
-            <tr key={car.id}>
-              <td>{car.title}</td>
-              <td>{car.brand}</td>
-              <td>£{car.price}</td>
-              <td>{car.status}</td>
-              <td>
-                {car.status !== "sold" && (
-                  <>
-                    <button
-                      onClick={() =>
-                        router.push(`/safranbrother/edit-car/${car.id}`)
-                      }
+        <div className="bg-white shadow overflow-hidden sm:rounded-lg">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Title
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Brand
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Price
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {cars.map((car) => (
+                  <tr key={car.id} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {car.title}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {car.brand}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      £{(car.price ?? 0).toLocaleString()}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                          car.status === "available"
+                            ? "bg-green-100 text-green-800"
+                            : "bg-gray-100 text-gray-800"
+                        }`}
+                      >
+                        {car.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                      {car.status !== "sold" && (
+                        <>
+                          <button
+                            onClick={() =>
+                              router.push(`/safranbrother/edit-car/${car.id}`)
+                            }
+                            className="text-indigo-600 hover:text-indigo-900"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => markSold(car.id)}
+                            className="text-green-600 hover:text-green-900"
+                          >
+                            Sold
+                          </button>
+                        </>
+                      )}
+                      <button
+                        onClick={() => deleteCar(car.id)}
+                        className="text-red-600 hover:text-red-900"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+                {cars.length === 0 && (
+                  <tr>
+                    <td
+                      colSpan={5}
+                      className="px-6 py-10 text-center text-sm text-gray-500"
                     >
-                      Edit
-                    </button>{" "}
-                    <button onClick={() => markSold(car.id)}>Sold</button>{" "}
-                  </>
+                      No cars found. Add some to get started!
+                    </td>
+                  </tr>
                 )}
-                <button onClick={() => deleteCar(car.id)}>Delete</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
