@@ -26,12 +26,16 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true)
 
   const fetchFeaturedCars = useCallback(async () => {
-    const { data } = await supabaseBrowser
+    const { data, error } = await supabaseBrowser
       .from("cars")
       .select("*")
-      .or("status.ilike.available,status.is.null")
+      .not("status", "eq", "sold")
       .order("created_at", { ascending: false })
       .limit(3)
+
+    if (error) {
+      console.error("Supabase Error (Home):", error)
+    }
 
     setCars(data || [])
     setLoading(false)
