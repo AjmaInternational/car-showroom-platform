@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { supabase } from "@/lib/supabaseBrowser"
+import { supabase } from "@/lib/supabase"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -25,7 +25,6 @@ export default function LoginPage() {
       return
     }
 
-    // HARD reload — required
     window.location.replace("/safranbrother")
   }
 

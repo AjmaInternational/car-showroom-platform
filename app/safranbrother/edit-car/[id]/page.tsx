@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useRouter, useParams } from "next/navigation"
-import { supabaseBrowser } from "@/lib/supabaseBrowser"
+import { supabase } from "@/lib/supabase"
 
 export default function EditCarPage() {
   const router = useRouter()
@@ -28,7 +28,7 @@ export default function EditCarPage() {
 
   useEffect(() => {
     async function loadCar() {
-      const { data } = await supabaseBrowser
+      const { data } = await supabase
         .from("cars")
         .select("*")
         .eq("id", id)
@@ -58,7 +58,7 @@ export default function EditCarPage() {
   async function updateCar(e: React.FormEvent) {
     e.preventDefault()
 
-    const { error } = await supabaseBrowser.from("cars").update({
+    const { error } = await supabase.from("cars").update({
       title: form.title,
       brand: form.brand,
       model: form.model,
@@ -102,7 +102,7 @@ export default function EditCarPage() {
           <input
             key={k}
             placeholder={label}
-            value={(form as any)[k]}
+            value={(form as Record<string, string>)[k]}
             onChange={(e) => update(k, e.target.value)}
             required
             style={{ width: "100%", padding: 10, marginTop: 10 }}
