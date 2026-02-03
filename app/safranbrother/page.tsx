@@ -1,31 +1,40 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { useRouter } from "next/navigation"
-import { supabaseBrowser } from "@/lib/supabaseBrowser"
+import { supabase } from "@/lib/supabase"
+
+interface AdminCar {
+  id: string
+  title: string
+  brand: string
+  price: number
+  status: string
+}
 
 export default function Dashboard() {
   const router = useRouter()
-  const [cars, setCars] = useState<any[]>([])
+  const [cars, setCars] = useState<AdminCar[]>([])
 
-  async function loadCars() {
-    const { data } = await supabaseBrowser
+  const loadCars = useCallback(async () => {
+    const { data } = await supabase
       .from("cars")
       .select("*")
       .order("created_at", { ascending: false })
 
     setCars(data || [])
-  }
+  }, [])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadCars()
-  }, [])
+  }, [loadCars])
 
   async function deleteCar(id: string) {
     const ok = confirm("⚠️ Permanently delete this car? This cannot be undone.")
     if (!ok) return
 
-    await supabaseBrowser.from("cars").delete().eq("id", id)
+    await supabase.from("cars").delete().eq("id", id)
     loadCars()
   }
 
@@ -35,13 +44,13 @@ export default function Dashboard() {
     )
 
     if (choice === "1") {
-      await supabaseBrowser.from("cars").update({ status: "sold" }).eq("id", id)
+      await supabase.from("cars").update({ status: "sold" }).eq("id", id)
     }
 
     if (choice === "2") {
       const ok = confirm("Delete this car now?")
       if (!ok) return
-      await supabaseBrowser.from("cars").delete().eq("id", id)
+      await supabase.from("cars").delete().eq("id", id)
     }
 
     loadCars()

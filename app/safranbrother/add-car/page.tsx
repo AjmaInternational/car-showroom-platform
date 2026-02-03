@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { supabaseBrowser } from "@/lib/supabaseBrowser"
+import { supabase } from "@/lib/supabase"
 
 export default function AddCarPage() {
   const router = useRouter()
@@ -61,7 +61,7 @@ export default function AddCarPage() {
     e.preventDefault()
     setLoading(true)
 
-    const { error } = await supabaseBrowser.from("cars").insert({
+    const { error } = await supabase.from("cars").insert({
       title: form.title,
       brand: form.brand,
       model: form.model,
@@ -117,14 +117,13 @@ export default function AddCarPage() {
           <input
             key={key}
             placeholder={label}
-            value={(form as any)[key]}
+            value={(form as Record<string, string>)[key]}
             onChange={(e) => updateField(key, e.target.value)}
             required
             style={{ width: "100%", padding: 10, marginTop: 10 }}
           />
         ))}
 
-        {/* SELECT FIELDS */}
         <select
           value={form.fuel}
           onChange={(e) => updateField("fuel", e.target.value)}
@@ -162,7 +161,6 @@ export default function AddCarPage() {
           style={{ width: "100%", marginTop: 10 }}
         />
 
-        {/* FEATURES */}
         <h3 style={{ marginTop: 20 }}>Features</h3>
         {FEATURE_OPTIONS.map((f) => (
           <label key={f} style={{ display: "block" }}>
@@ -183,7 +181,6 @@ export default function AddCarPage() {
           style={{ width: "100%", marginTop: 10 }}
         />
 
-        {/* IMAGES */}
         <h3 style={{ marginTop: 20 }}>Car Images (URLs)</h3>
 
         {imageUrls.map((url, i) => (
