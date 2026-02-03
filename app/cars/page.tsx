@@ -32,7 +32,7 @@ export default function CarsPage() {
     let query = supabaseBrowser
       .from("cars")
       .select("*")
-      .not("status", "eq", "sold")
+      .or('status.eq.available,status.is.null')
       .order("created_at", { ascending: false })
 
     if (filterBrand) {
@@ -58,7 +58,7 @@ export default function CarsPage() {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     void fetchCars()
-    
+
     // Reveal observer
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -68,14 +68,14 @@ export default function CarsPage() {
 
     const revealElements = document.querySelectorAll('.reveal')
     revealElements.forEach(el => observer.observe(el))
-    
+
     return () => observer.disconnect()
   }, [fetchCars])
 
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      
+
       <main className="flex-grow bg-brand-navy pb-32">
         {/* HERO / HEADER */}
         <section className="relative pt-32 md:pt-48 pb-16 md:pb-32 overflow-hidden">
@@ -97,9 +97,9 @@ export default function CarsPage() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
               <div className="space-y-2">
                 <label className="text-brand-silver/30 text-[8px] uppercase tracking-[0.3em] font-black">Search Brand</label>
-                <input 
-                  type="text" 
-                  placeholder="e.g. BMW, Audi" 
+                <input
+                  type="text"
+                  placeholder="e.g. BMW, Audi"
                   className="w-full bg-brand-navy/50 border border-brand-blue/50 rounded-sm px-4 py-3 text-xs text-brand-silver focus:border-brand-orange outline-none transition-all duration-500 placeholder:text-brand-silver/20"
                   value={filterBrand}
                   onChange={(e) => setFilterBrand(e.target.value)}
@@ -107,7 +107,7 @@ export default function CarsPage() {
               </div>
               <div className="space-y-2">
                 <label className="text-brand-silver/30 text-[8px] uppercase tracking-[0.3em] font-black">Maximum Price</label>
-                <select 
+                <select
                   className="w-full bg-brand-navy/50 border border-brand-blue/50 rounded-sm px-4 py-3 text-xs text-brand-silver focus:border-brand-orange outline-none transition-all duration-500 appearance-none"
                   value={filterPrice}
                   onChange={(e) => setFilterPrice(e.target.value)}
@@ -122,7 +122,7 @@ export default function CarsPage() {
               </div>
               <div className="space-y-2">
                 <label className="text-brand-silver/30 text-[8px] uppercase tracking-[0.3em] font-black">Minimum Year</label>
-                <select 
+                <select
                   className="w-full bg-brand-navy/50 border border-brand-blue/50 rounded-sm px-4 py-3 text-xs text-brand-silver focus:border-brand-orange outline-none transition-all duration-500 appearance-none"
                   value={filterYear}
                   onChange={(e) => setFilterYear(e.target.value)}
@@ -134,8 +134,8 @@ export default function CarsPage() {
                   <option value="2018">2018 & Newer</option>
                 </select>
               </div>
-              
-              <button 
+
+              <button
                 onClick={() => { setFilterBrand(""); setFilterPrice(""); setFilterYear(""); }}
                 className="bg-brand-blue/30 hover:bg-brand-blue/50 text-brand-silver text-[10px] uppercase tracking-[0.3em] font-bold py-3.5 px-6 rounded-sm transition-all duration-500 border border-brand-blue/50"
               >
@@ -167,7 +167,7 @@ export default function CarsPage() {
                 {cars.length === 0 && (
                   <div className="col-span-full py-48 text-center reveal border border-dashed border-brand-blue/30 rounded-lg">
                     <p className="text-brand-silver/30 text-lg italic tracking-tighter">No vehicles currently match your refined criteria.</p>
-                    <button 
+                    <button
                       onClick={() => { setFilterBrand(""); setFilterPrice(""); setFilterYear(""); }}
                       className="mt-6 text-brand-orange text-xs font-bold uppercase tracking-widest hover:underline"
                     >

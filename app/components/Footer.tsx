@@ -8,12 +8,6 @@ export default function Footer() {
           <div className="col-span-1 md:col-span-1">
             <Link href="/" className="inline-block mb-8">
               <div className="flex items-center space-x-3">
-                <div className="h-10 w-10 flex items-center justify-center">
-                  <svg viewBox="0 0 100 100" className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M30 30 L70 30 L75 50 L70 70 L30 70 Z" fill="#F57C00" />
-                    <rect x="20" y="48" width="60" height="4" fill="#E5E7EB" />
-                  </svg>
-                </div>
                 <span className="text-xl font-black tracking-tighter italic text-brand-silver">
                   R.S LANKA <span className="text-brand-orange">MOTORS</span>
                 </span>

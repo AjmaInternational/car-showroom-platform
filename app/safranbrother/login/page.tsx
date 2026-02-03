@@ -32,7 +32,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-brand-navy py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       <div className="absolute inset-0 bg-brand-blue/10 -skew-y-12 origin-top-right translate-y-[-50%]" />
-      
+
       <div className="max-w-md w-full space-y-12 p-12 glass-effect border border-brand-blue/30 rounded-sm relative z-10">
         <div className="text-center">
           <span className="text-brand-orange font-bold uppercase tracking-[0.4em] text-[10px] mb-4 block">Internal Access</span>
@@ -43,7 +43,7 @@ export default function LoginPage() {
             Enter your credentials to manage collection
           </p>
         </div>
-        
+
         <form className="mt-12 space-y-8" onSubmit={login}>
           <div className="space-y-4">
             <div className="space-y-1">
@@ -85,7 +85,7 @@ export default function LoginPage() {
             </div>
           )}
         </form>
-        
+
         <div className="pt-8 border-t border-brand-blue/20 text-center">
            <p className="text-[8px] text-brand-silver/20 uppercase tracking-[0.2em]">R.S Lanka Motors Showroom Management System</p>
         </div>

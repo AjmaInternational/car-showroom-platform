@@ -3,7 +3,7 @@ import "./globals.css"
 import { Metadata } from "next"
 import FloatingWhatsApp from "./components/FloatingWhatsApp"
 
-const inter = Inter({ 
+const inter = Inter({
   subsets: ["latin"],
   variable: '--font-inter',
   display: 'swap',

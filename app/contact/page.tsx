@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import Header from "../components/Header"
 import Footer from "../components/Footer"
+import { supabase } from "@/lib/supabase"
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false)
@@ -11,35 +12,30 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    
+
     const form = e.currentTarget as HTMLFormElement
     const formData = new FormData(form)
     
-    // To send emails, you can use a service like Formspree
-    // Replace 'YOUR_FORMSPREE_ID' with your actual Formspree ID
-    // or use another email service endpoint.
-    try {
-      const response = await fetch("https://formspree.io/f/YOUR_FORMSPREE_ID", {
-        method: "POST",
-        body: formData,
-        headers: {
-          'Accept': 'application/json'
-        }
-      });
+    const fullName = formData.get("fullName") as string
+    const email = formData.get("email") as string
+    const vehicle = formData.get("vehicle") as string
+    const message = formData.get("message") as string
 
-      if (response.ok) {
-        setSubmitted(true);
-      } else {
-        // Fallback for demo purposes if no ID is provided
-        console.warn("Formspree ID not configured. Simulated success.");
-        setSubmitted(true);
-      }
+    try {
+      const { error } = await supabase.from("inquiries").insert({
+        full_name: fullName,
+        email,
+        vehicle,
+        message
+      })
+
+      if (error) throw error
+      setSubmitted(true)
     } catch (error) {
-      console.error("Error submitting inquiry:", error);
-      // Show success anyway to maintain the premium feel
-      setSubmitted(true);
+      console.error("Error submitting inquiry:", error)
+      alert("There was an error sending your message. Please try again or contact us via WhatsApp.")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   }
 
@@ -52,14 +48,14 @@ export default function ContactPage() {
 
     const revealElements = document.querySelectorAll('.reveal')
     revealElements.forEach(el => observer.observe(el))
-    
+
     return () => observer.disconnect()
   }, [])
 
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      
+
       <main className="flex-grow bg-brand-navy">
         {/* HERO */}
         <section className="relative pt-32 md:pt-64 pb-16 md:pb-32 overflow-hidden">
@@ -111,7 +107,7 @@ export default function ContactPage() {
                   <div className="absolute top-0 right-0 p-8">
                      <span className="text-brand-orange font-black text-6xl opacity-5 italic select-none">RS</span>
                   </div>
-                  
+
                   {submitted ? (
                     <div className="py-24 text-center animate-fade-in">
                       <div className="w-20 h-20 rounded-full bg-brand-orange/20 flex items-center justify-center mx-auto mb-10">
@@ -121,7 +117,7 @@ export default function ContactPage() {
                       <p className="text-brand-silver/50 text-sm uppercase tracking-[0.2em] max-w-xs mx-auto leading-loose">
                         A showroom consultant will contact you via electronic mail within 24 business hours.
                       </p>
-                      <button 
+                      <button
                         onClick={() => setSubmitted(false)}
                         className="mt-12 text-brand-orange text-[10px] font-black uppercase tracking-[0.4em] hover:underline"
                       >
@@ -150,7 +146,7 @@ export default function ContactPage() {
                           <label className="text-brand-silver/30 text-[8px] uppercase tracking-[0.4em] font-black group-focus-within:text-brand-orange transition-colors">Message Content</label>
                           <textarea name="message" required rows={5} className="w-full bg-transparent border-b border-brand-blue/50 rounded-none px-0 py-4 text-brand-silver outline-none focus:border-brand-orange transition-all duration-500 resize-none placeholder:text-brand-silver/10 font-medium" placeholder="How can our consultants assist you today?"></textarea>
                         </div>
-                        <button 
+                        <button
                           disabled={loading}
                           className="w-full bg-brand-orange hover:bg-orange-600 text-white font-black py-6 rounded-sm transition-all duration-500 shadow-2xl shadow-orange-500/20 uppercase text-[10px] tracking-[0.4em] disabled:opacity-50"
                         >
@@ -167,15 +163,15 @@ export default function ContactPage() {
         {/* MAP SECTION */}
         <section className="py-32 reveal">
            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <a 
-                href="https://www.google.com/maps/place/15-17+Cumberland+St,+London+W1H+7AL,+UK" 
-                target="_blank" 
+              <a
+                href="https://www.google.com/maps/place/15-17+Cumberland+St,+London+W1H+7AL,+UK"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="block h-[500px] bg-brand-blue/20 rounded-sm border border-brand-blue/50 flex flex-col items-center justify-center relative overflow-hidden group cursor-pointer"
               >
                  <div className="absolute inset-0 grayscale group-hover:grayscale-0 transition-all duration-[2s] opacity-40">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=1920" className="w-full h-full object-cover" alt="Map Area" />
+                    <img src="/images/map.jpeg" className="w-full h-full object-cover" alt="Map Area" />
                  </div>
                  <div className="relative z-10 text-center px-4">
                     <div className="w-20 h-20 rounded-full border border-brand-orange flex items-center justify-center mb-8 mx-auto group-hover:scale-110 transition-transform duration-500">

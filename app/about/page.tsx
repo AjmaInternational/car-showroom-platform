@@ -15,14 +15,14 @@ export default function AboutPage() {
 
     const revealElements = document.querySelectorAll('.reveal')
     revealElements.forEach(el => observer.observe(el))
-    
+
     return () => observer.disconnect()
   }, [])
 
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      
+
       <main className="flex-grow bg-brand-navy">
         {/* HERO */}
         <section className="relative pt-32 md:pt-64 pb-16 md:pb-32 overflow-hidden bg-brand-blue/10">
@@ -51,14 +51,14 @@ export default function AboutPage() {
                 </p>
               </div>
             </div>
-            
+
             <div className="relative reveal [transition-delay:200ms]">
                <div className="absolute -inset-10 border border-brand-orange/10 -z-10 rotate-3" />
                {/* eslint-disable-next-line @next/next/no-img-element */}
-               <img 
-                 src="/images/about-us-page-image1.jpg" 
-                 className="rounded-sm shadow-2xl grayscale" 
-                 alt="R.S Lanka Motors Showroom Concept" 
+               <img
+                 src="/images/abtuspagebuilding.jpg"
+                 className="rounded-sm shadow-2xl grayscale"
+                 alt="R.S Lanka Motors Showroom Concept"
                />
             </div>
           </div>
@@ -110,7 +110,7 @@ export default function AboutPage() {
            <div className="absolute inset-0 bg-brand-navy opacity-10 -skew-x-12 translate-x-1/2" />
            <div className="max-w-4xl mx-auto px-4 relative z-10 text-center reveal active">
               <h2 className="text-4xl md:text-6xl font-black text-white mb-12 tracking-tighter leading-none">Experience the <br /> Showroom Difference</h2>
-              <Link 
+              <Link
                 href="/cars"
                 className="inline-block bg-brand-navy text-white px-8 md:px-16 py-6 rounded-sm font-bold uppercase tracking-[0.3em] text-xs hover:bg-brand-blue transition-all duration-500 shadow-2xl"
               >

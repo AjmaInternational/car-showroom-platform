@@ -13,8 +13,8 @@ export default function FloatingWhatsApp() {
         Consult on WhatsApp
       </div>
       <div className="w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-2xl shadow-[#25D366]/40 hover:scale-110 transition-transform duration-500">
-        <svg 
-          viewBox="0 0 24 24" 
+        <svg
+          viewBox="0 0 24 24"
           className="w-8 h-8 fill-white"
           xmlns="http://www.w3.org/2000/svg"
         >

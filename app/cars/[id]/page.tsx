@@ -63,7 +63,7 @@ export default async function CarDetailPage({ params }: { params: Promise<{ id: 
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <Header />
-      
+
       <main className="flex-grow bg-brand-navy pb-32">
         {/* TOP SECTION: HERO & TITLE */}
         <section className="relative pt-32 md:pt-48 pb-10 md:pb-20 overflow-hidden">
@@ -90,10 +90,10 @@ export default async function CarDetailPage({ params }: { params: Promise<{ id: 
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             <div className="lg:col-span-3 aspect-[16/9] overflow-hidden rounded-sm bg-brand-blue/20 animate-fade-in">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img 
-                src={car.image_urls?.[0] || "/placeholder-car.jpg"} 
-                className="w-full h-full object-cover transition-transform duration-[2s] hover:scale-105" 
-                alt={`${car.brand} ${car.model} Presentation`} 
+              <img
+                src={car.image_urls?.[0] || "/placeholder-car.jpg"}
+                className="w-full h-full object-cover transition-transform duration-[2s] hover:scale-105"
+                alt={`${car.brand} ${car.model} Presentation`}
               />
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-1 gap-6">
@@ -158,7 +158,7 @@ export default async function CarDetailPage({ params }: { params: Promise<{ id: 
                 </div>
 
                 <div className="mt-16 space-y-4">
-                  <a 
+                  <a
                     href={`https://wa.me/?text=Hi, I am interested in the ${car.year} ${car.brand} ${car.model} at R.S Lanka Motors.`}
                     className="block w-full bg-brand-orange hover:bg-orange-600 text-white py-5 rounded-sm font-bold text-center transition-all duration-500 uppercase text-[10px] tracking-[0.3em] shadow-xl shadow-orange-500/20"
                   >
@@ -187,7 +187,7 @@ export default async function CarDetailPage({ params }: { params: Promise<{ id: 
 
       {/* STICKY MOBILE CTA */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 glass-effect border-t border-brand-blue/50 p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] flex space-x-4">
-          <a 
+          <a
             href={`https://wa.me/?text=Interested in ${car.brand} ${car.model}`}
             className="flex-1 bg-brand-orange text-white py-4 rounded-sm font-bold text-center text-[10px] uppercase tracking-[0.3em]"
           >

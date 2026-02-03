@@ -29,7 +29,7 @@ export default function HomePage() {
     const { data, error } = await supabaseBrowser
       .from("cars")
       .select("*")
-      .not("status", "eq", "sold")
+      .or('status.eq.available,status.is.null')
       .order("created_at", { ascending: false })
       .limit(3)
 
@@ -89,20 +89,20 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
       />
       <Header />
-      
+
       <main className="flex-grow">
         {/* 1. HERO SECTION */}
         <section className="relative min-h-screen flex items-center pt-24 md:pt-32 overflow-hidden">
           <div className="absolute inset-0 z-0">
             <div className="absolute inset-0 bg-gradient-to-b from-brand-navy/60 via-brand-navy/40 to-brand-navy z-10" />
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img 
-              src="/images/bg-image-homepage.jpg"
-              className="w-full h-full object-cover scale-110 animate-fade-in" 
-              alt="Premium Automotive Showroom" 
+            <img
+              src="/images/bgimage.jpg"
+              className="w-full h-full object-cover scale-110 animate-fade-in"
+              alt="Premium Automotive Showroom"
             />
           </div>
-          
+
           <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center py-20">
             <div className="max-w-4xl mx-auto">
               <span className="text-brand-orange font-bold uppercase tracking-[0.4em] text-[10px] md:text-xs mb-8 block animate-fade-up">
@@ -115,15 +115,15 @@ export default function HomePage() {
                 Experience the pinnacle of automotive excellence with our meticulously curated collection of world-class vehicles.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center space-y-6 sm:space-y-0 sm:space-x-8 animate-fade-up [animation-delay:600ms]">
-                <Link 
-                  href="/cars" 
+                <Link
+                  href="/cars"
                   className="group bg-brand-orange hover:bg-orange-600 text-white px-16 py-6 rounded-sm font-bold transition-all duration-500 text-center uppercase tracking-[0.3em] text-[10px] shadow-2xl shadow-orange-500/20 flex items-center space-x-4"
                 >
                   <span>Enter Showroom</span>
                   <span className="w-8 h-px bg-white/30 group-hover:w-12 transition-all duration-500" />
                 </Link>
-                <Link 
-                  href="/about" 
+                <Link
+                  href="/about"
                   className="text-brand-silver/60 hover:text-brand-orange transition-all duration-500 text-center uppercase tracking-[0.3em] text-[10px] font-bold border-b border-brand-silver/10 hover:border-brand-orange pb-2"
                 >
                   Our Vision & Heritage
@@ -168,10 +168,10 @@ export default function HomePage() {
               <div className="relative reveal [transition-delay:200ms]">
                 <div className="absolute -inset-4 border border-brand-orange/20 rounded-sm translate-x-8 translate-y-8 -z-10" />
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img 
-                  src="/images/chevrolet-car-for-homepage" 
-                  className="rounded-sm shadow-2xl w-full grayscale hover:grayscale-0 transition-all duration-1000" 
-                  alt="Professional Showroom" 
+                <img
+                  src="/images/chevroletcar.jpg"
+                  className="rounded-sm shadow-2xl w-full grayscale hover:grayscale-0 transition-all duration-1000"
+                  alt="Professional Showroom"
                 />
               </div>
             </div>
@@ -181,7 +181,7 @@ export default function HomePage() {
         {/* 3. FEATURED VEHICLES */}
         <section className="py-32 bg-brand-blue/30 relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-brand-orange/20 to-transparent" />
-          
+
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8 reveal">
               <div>
@@ -252,16 +252,16 @@ export default function HomePage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
               <div className="order-2 lg:order-1 reveal">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img 
-                  src="/images/selection-process.png" 
-                  className="rounded-sm shadow-2xl grayscale" 
-                  alt="Vehicle Inspection" 
+                <img
+                  src="/images/selectionprocess.png"
+                  className="rounded-sm shadow-2xl grayscale"
+                  alt="Vehicle Inspection"
                 />
               </div>
               <div className="order-1 lg:order-2 reveal [transition-delay:200ms]">
                 <span className="text-brand-orange font-bold uppercase tracking-[0.3em] text-[10px] mb-4 block">Path to Perfection</span>
                 <h2 className="text-4xl md:text-5xl font-bold text-brand-white mb-12 tracking-tighter">Our Selection Process</h2>
-                
+
                 <div className="space-y-12">
                   {[
                     { step: "01", title: "Global Sourcing", desc: "We identify and source vehicles that meet our strict criteria for quality and history." },
@@ -288,15 +288,15 @@ export default function HomePage() {
             <h2 className="text-2xl font-bold text-brand-white mb-12 tracking-tight italic uppercase tracking-[0.2em]">The Premier Car Showroom in the UK</h2>
             <div className="prose prose-invert max-w-none text-brand-silver/40 text-sm leading-loose">
               <p className="mb-8">
-                R.S Lanka Motors is recognized as a leading automotive showroom for those seeking quality cars in the UK. 
-                Our commitment to professional excellence and premium vehicle selection makes us the trusted choice for 
-                discerning buyers. Whether you are searching for a high-performance vehicle or a luxury daily driver, 
+                R.S Lanka Motors is recognized as a leading automotive showroom for those seeking quality cars in the UK.
+                Our commitment to professional excellence and premium vehicle selection makes us the trusted choice for
+                discerning buyers. Whether you are searching for a high-performance vehicle or a luxury daily driver,
                 our showroom collection offers a curated selection of the finest vehicles available.
               </p>
               <p>
-                Experience the R.S Lanka Motors difference today. Visit our showroom or browse our available vehicles 
-                online to discover why we are the preferred automotive showroom in the United Kingdom. We pride 
-                ourselves on our transparent approach and dedicated service, ensuring your vehicle selection process 
+                Experience the R.S Lanka Motors difference today. Visit our showroom or browse our available vehicles
+                online to discover why we are the preferred automotive showroom in the United Kingdom. We pride
+                ourselves on our transparent approach and dedicated service, ensuring your vehicle selection process
                 is as seamless and professional as the cars we present.
               </p>
             </div>
@@ -308,3 +308,4 @@ export default function HomePage() {
     </div>
   )
 }
+

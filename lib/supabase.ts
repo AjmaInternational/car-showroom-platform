@@ -15,6 +15,6 @@ export const supabase = createClient(
   }
 )
 
-// Export as supabaseBrowser for backward compatibility if needed, 
+// Export as supabaseBrowser for backward compatibility if needed,
 // but preferred to use 'supabase'
 export const supabaseBrowser = supabase

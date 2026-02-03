@@ -16,7 +16,7 @@ export default function Header() {
   }, [])
 
   return (
-    <header 
+    <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         isScrolled ? "glass-effect py-4 shadow-2xl" : "bg-brand-navy/20 backdrop-blur-[2px] py-6 border-b border-white/5"
       }`}
@@ -24,21 +24,23 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           <Link href="/" className="flex items-center group">
-            {/* LOGO ONLY - GRAPHICAL REPRESENTATION */}
-            <div className="relative h-12 w-12 flex items-center justify-center">
-              <svg 
-                viewBox="0 0 100 100" 
-                className="h-full w-full transition-transform duration-500 group-hover:rotate-12"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <circle cx="50" cy="50" r="45" fill="none" stroke="#F57C00" strokeWidth="2" strokeDasharray="10 5" />
-                <path d="M30 30 L70 30 L75 50 L70 70 L30 70 Z" fill="#F57C00" />
-                <path d="M40 40 L60 40 L62 50 L60 60 L40 60 Z" fill="#0B1E3B" />
-                <rect x="20" y="48" width="60" height="4" fill="#E5E7EB" />
-              </svg>
+            {/* LOGO */}
+            <div className="relative h-12 flex items-center justify-center">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img 
+                src="/images/logo.png" 
+                alt="R.S Lanka Motors Logo" 
+                className="h-10 w-auto transition-transform duration-500 group-hover:scale-110"
+                onError={(e) => {
+                  // Fallback to text if logo is missing
+                  e.currentTarget.style.display = 'none';
+                  e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                }}
+              />
+              <span className="hidden text-brand-orange font-black italic text-xl tracking-tighter">RS LANKA</span>
             </div>
           </Link>
-          
+
           <nav className="hidden md:flex items-center space-x-10 text-xs font-bold uppercase tracking-[0.2em] text-brand-silver/80">
             <Link href="/" className="hover:text-brand-orange transition-colors duration-300">Home</Link>
             <Link href="/cars" className="hover:text-brand-orange transition-colors duration-300">Cars</Link>
@@ -47,14 +49,14 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center space-x-4">
-            <Link 
-              href="/cars" 
+            <Link
+              href="/cars"
               className="hidden sm:block bg-brand-orange hover:bg-orange-600 text-white px-8 py-3 rounded-sm font-bold transition-all duration-300 shadow-lg shadow-orange-500/10 uppercase text-[10px] tracking-[0.2em]"
             >
               Inventory
             </Link>
-            
-            <button 
+
+            <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="md:hidden text-brand-white p-2"
               aria-label="Toggle Menu"
@@ -83,9 +85,9 @@ export default function Header() {
               { name: "Our Vision", href: "/about" },
               { name: "Contact Us", href: "/contact" }
             ].map((item) => (
-              <Link 
-                key={item.name} 
-                href={item.href} 
+              <Link
+                key={item.name}
+                href={item.href}
                 onClick={() => setIsMenuOpen(false)}
                 className="text-2xl font-black text-brand-white hover:text-brand-orange transition-colors uppercase tracking-[0.2em]"
               >
@@ -94,8 +96,8 @@ export default function Header() {
             ))}
           </nav>
           <div className="p-8">
-            <Link 
-              href="/cars" 
+            <Link
+              href="/cars"
               onClick={() => setIsMenuOpen(false)}
               className="block w-full bg-brand-orange text-white text-center py-6 font-black uppercase tracking-[0.3em] text-xs"
             >
