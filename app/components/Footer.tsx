@@ -55,7 +55,7 @@ export default function Footer() {
               </li>
               <li className="flex items-start space-x-3">
                 <span className="text-brand-orange">W:</span>
-                <span className="text-brand-silver font-bold">WhatsApp Available</span>
+                <span className="text-brand-silver font-bold">+44 790 314 1787</span>
               </li>
             </ul>
           </div>
