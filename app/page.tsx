@@ -2,10 +2,11 @@
 
 import { useEffect, useState, useCallback } from "react"
 import Link from "next/link"
-import { supabase as supabaseBrowser } from "@/lib/supabase"
+import { supabaseBrowser } from "@/lib/supabaseBrowser"
 import Header from "./components/Header"
 import Footer from "./components/Footer"
 import CarCard from "./components/CarCard"
+
 
 type Car = {
   id: string
@@ -25,24 +26,28 @@ export default function HomePage() {
   const [cars, setCars] = useState<Car[]>([])
   const [loading, setLoading] = useState(true)
 
-  const fetchFeaturedCars = useCallback(async () => {
-    const { data, error } = await supabaseBrowser
-      .from("cars")
-      .select("*")
-      .or('status.eq.available,status.is.null')
-      .order("created_at", { ascending: false })
-      .limit(3)
+  useEffect(() => {
+    let ignore = false
+    
+    async function fetchFeaturedCars() {
+      const { data, error } = await supabaseBrowser
+  .from("cars")
+  .select("*")
+  .order("created_at", { ascending: false })
+  .limit(3)
 
-    if (error) {
-      console.error("Supabase Error (Home):", error)
+
+      if (ignore) return
+
+      if (error) {
+        console.error("Supabase Error (Home):", error)
+      }
+
+      setCars(data || [])
+      console.log("HOME PAGE CARS 👉", data)
+      setLoading(false)
     }
 
-    setCars(data || [])
-    setLoading(false)
-  }, [])
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     void fetchFeaturedCars()
 
     // Scroll reveal observer
@@ -61,8 +66,11 @@ export default function HomePage() {
     const revealElements = document.querySelectorAll('.reveal')
     revealElements.forEach(el => observer.observe(el))
 
-    return () => observer.disconnect()
-  }, [fetchFeaturedCars])
+    return () => {
+      ignore = true
+      observer.disconnect()
+    }
+  }, [])
 
   const orgJsonLd = {
     "@context": "https://schema.org",
@@ -203,7 +211,7 @@ export default function HomePage() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
                 {cars.map((car, idx) => (
-                  <div key={car.id} className={`reveal`} style={{ transitionDelay: `${idx * 200}ms` }}>
+                  <div key={car.id} className="reveal active" style={{ transitionDelay: `${idx * 200}ms` }}>
                     <CarCard car={car} />
                   </div>
                 ))}

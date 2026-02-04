@@ -25,12 +25,12 @@ export default function Header() {
         <div className="flex justify-between items-center">
           <Link href="/" className="flex items-center group">
             {/* LOGO */}
-            <div className="relative h-12 flex items-center justify-center">
+            <div className="relative h-20 flex items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img 
                 src="/images/logo.png" 
                 alt="R.S Lanka Motors Logo" 
-                className="h-10 w-auto transition-transform duration-500 group-hover:scale-110"
+                className="h-20 md:h-24 w-auto transition-transform duration-500 group-hover:scale-110 object-contain"
                 onError={(e) => {
                   // Fallback to text if logo is missing
                   e.currentTarget.style.display = 'none';
@@ -75,7 +75,7 @@ export default function Header() {
       <div className={`fixed inset-0 bg-brand-navy z-[60] transition-transform duration-500 md:hidden ${isMenuOpen ? "translate-x-0" : "translate-x-full"}`}>
         <div className="flex flex-col h-full">
           <div className="flex justify-between items-center p-8 border-b border-brand-blue/30">
-            <span className="text-brand-orange font-black italic tracking-tighter">RS LANKA</span>
+            <img src="/images/logo.png" alt="RS Lanka Logo" className="h-12 w-auto object-contain" />
             <button onClick={() => setIsMenuOpen(false)} className="text-brand-white text-3xl">&times;</button>
           </div>
           <nav className="flex flex-col items-center justify-center flex-grow space-y-12">

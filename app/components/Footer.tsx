@@ -7,6 +7,11 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-16 mb-20">
           <div className="col-span-1 md:col-span-1">
             <Link href="/" className="inline-block mb-8">
+              <img 
+                src="/images/logo.png" 
+                alt="R.S Lanka Motors Logo" 
+                className="h-20 md:h-24 w-auto mb-4 object-contain" 
+              />
               <div className="flex items-center space-x-3">
                 <span className="text-xl font-black tracking-tighter italic text-brand-silver">
                   R.S LANKA <span className="text-brand-orange">MOTORS</span>
@@ -46,7 +51,7 @@ export default function Footer() {
               </li>
               <li className="flex items-start space-x-3">
                 <span className="text-brand-orange">E:</span>
-                <span className="text-brand-silver">info@rslankamotors.com</span>
+                <a href="mailto:info@rslankamotors.com" className="text-brand-silver hover:text-brand-orange transition-colors">info@rslankamotors.com</a>
               </li>
               <li className="flex items-start space-x-3">
                 <span className="text-brand-orange">W:</span>

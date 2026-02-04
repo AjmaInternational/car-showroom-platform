@@ -1,11 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { supabase as supabaseBrowser } from "@/lib/supabase"
 
 export default function AddCarPage() {
   const router = useRouter()
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
   const [loading, setLoading] = useState(false)
 
   const [form, setForm] = useState({
@@ -21,107 +22,110 @@ export default function AddCarPage() {
     price: "",
     location: "",
     description: "",
-    extraFeatures: "",
   })
 
-  const [imageUrls, setImageUrls] = useState<string[]>(["", "", ""])
   const [features, setFeatures] = useState<string[]>([])
+  const [imageFiles, setImageFiles] = useState<File[]>([])
 
-  const FEATURE_OPTIONS = [
+  const FEATURES = [
     "Air Conditioning",
-    "Bluetooth",
     "Reverse Camera",
-    "Alloy Wheels",
     "Leather Seats",
+    "Bluetooth",
+    "Alloy Wheels",
   ]
 
   function updateField(key: string, value: string) {
-    setForm((prev) => ({ ...prev, [key]: value }))
+    setForm((p) => ({ ...p, [key]: value }))
   }
 
-  function toggleFeature(feature: string) {
-    setFeatures((prev) =>
-      prev.includes(feature)
-        ? prev.filter((f) => f !== feature)
-        : [...prev, feature]
+  function toggleFeature(f: string) {
+    setFeatures((p) =>
+      p.includes(f) ? p.filter((x) => x !== f) : [...p, f]
     )
   }
 
-  function updateImage(index: number, value: string) {
-    const copy = [...imageUrls]
-    copy[index] = value
-    setImageUrls(copy)
+  function handleFiles(files: FileList | null) {
+    if (!files) return
+    setImageFiles((p) => [...p, ...Array.from(files)])
   }
 
-  function addImageField() {
-    setImageUrls((prev) => [...prev, ""])
+  function removeImage(i: number) {
+    setImageFiles((p) => p.filter((_, idx) => idx !== i))
+  }
+
+  async function uploadImages(): Promise<string[]> {
+    const urls: string[] = []
+
+    for (const file of imageFiles) {
+      const ext = file.name.split(".").pop()
+      const name = `${crypto.randomUUID()}.${ext}`
+      const path = `cars/${name}`
+
+      const { error } = await supabaseBrowser.storage
+        .from("images")
+        .upload(path, file)
+
+      if (error) throw error
+
+      const { data } = supabaseBrowser.storage
+        .from("images")
+        .getPublicUrl(path)
+
+      urls.push(data.publicUrl)
+    }
+
+    return urls
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
 
-    const { error } = await supabaseBrowser.from("cars").insert({
-      title: form.title,
-      brand: form.brand,
-      model: form.model,
-      year: Number(form.year),
-      mileage: Number(form.mileage),
-      fuel: form.fuel,
-      transmission: form.transmission,
-      condition: form.condition.toLowerCase(),
-      color: form.color,
-      price: Number(form.price),
-      location: form.location,
-      description: form.description,
-      features,
-      extra_features: form.extraFeatures || null,
-      image_urls: imageUrls.filter(Boolean),
-      status: "available",
-    })
+    try {
+      const image_urls = await uploadImages()
 
-    setLoading(false)
+      const { error } = await supabaseBrowser.from("cars").insert({
+        ...form,
+        year: Number(form.year),
+        mileage: Number(form.mileage),
+        price: Number(form.price),
+        condition: form.condition.toLowerCase(),
+        features,
+        image_urls,
+        status: "available",
+      })
 
-    if (error) {
-      alert(error.message)
-      return
+      if (error) throw error
+      router.push("/safranbrother")
+    } catch (err: any) {
+      alert(err.message || "Error")
+    } finally {
+      setLoading(false)
     }
-
-    alert("Car added successfully")
-    router.push("/safranbrother")
   }
 
-  const inputClasses =
-    "mt-1 block w-full rounded-md border-gray-300 bg-white text-gray-900 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+  const input =
+    "mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+
+  const label = "text-sm font-medium text-gray-900"
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto mb-4">
-        <button
-          onClick={() => router.push("/safranbrother")}
-          className="text-sm font-medium text-indigo-600 hover:text-indigo-500 flex items-center transition-colors"
-        >
-          ← Back to Dashboard
-        </button>
-      </div>
+    <div className="max-w-6xl mx-auto p-6">
+      <button
+        onClick={() => router.push("/safranbrother")}
+        className="text-sm text-indigo-600 hover:underline mb-4"
+      >
+        ← Back to Dashboard
+      </button>
 
-      <div className="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow">
-        <div className="mb-8 border-b border-gray-100 pb-4">
-          <h1 className="text-3xl font-bold text-gray-900">Add New Car</h1>
-          <p className="mt-2 text-sm text-gray-600">
-            Enter the details of the vehicle to list it in the showroom.
-          </p>
-        </div>
+      <div className="bg-white rounded-xl shadow p-8 text-gray-900">
+        <h1 className="text-2xl font-bold mb-1">Add New Car</h1>
+        <p className="text-sm text-gray-500 mb-8">
+          Enter the details of the vehicle to list it in the showroom.
+        </p>
 
-        <form
-          onSubmit={handleSubmit}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault()
-            }
-          }}
-          className="space-y-6"
-        >
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
               ["title", "Car Title"],
@@ -132,29 +136,26 @@ export default function AddCarPage() {
               ["color", "Color"],
               ["price", "Price (£)"],
               ["location", "Location"],
-            ].map(([key, label]) => (
-              <div key={key}>
-                <label className="block text-sm font-medium text-gray-700">
-                  {label}
-                </label>
+            ].map(([k, l]) => (
+              <div key={k}>
+                <label className={label}>{l}</label>
                 <input
-                  placeholder={label}
-                  value={form[key as keyof typeof form]}
-                  onChange={(e) => updateField(key, e.target.value)}
+                  className={input}
+                  value={form[k as keyof typeof form]}
+                  onChange={(e) => updateField(k, e.target.value)}
                   required
-                  className={inputClasses}
                 />
               </div>
             ))}
+          </div>
 
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Fuel Type
-              </label>
+              <label className={label}>Fuel Type</label>
               <select
+                className={input}
                 value={form.fuel}
                 onChange={(e) => updateField("fuel", e.target.value)}
-                className={inputClasses}
               >
                 <option>Petrol</option>
                 <option>Diesel</option>
@@ -164,13 +165,13 @@ export default function AddCarPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Transmission
-              </label>
+              <label className={label}>Transmission</label>
               <select
+                className={input}
                 value={form.transmission}
-                onChange={(e) => updateField("transmission", e.target.value)}
-                className={inputClasses}
+                onChange={(e) =>
+                  updateField("transmission", e.target.value)
+                }
               >
                 <option>Automatic</option>
                 <option>Manual</option>
@@ -178,13 +179,11 @@ export default function AddCarPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Condition
-              </label>
+              <label className={label}>Condition</label>
               <select
+                className={input}
                 value={form.condition}
                 onChange={(e) => updateField("condition", e.target.value)}
-                className={inputClasses}
               >
                 <option>Used</option>
                 <option>New</option>
@@ -193,79 +192,74 @@ export default function AddCarPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Car Description
-            </label>
+            <label className={label}>Car Description</label>
             <textarea
-              placeholder="Tell us about the car..."
+              rows={4}
+              className={input}
               value={form.description}
               onChange={(e) => updateField("description", e.target.value)}
-              rows={4}
-              className={inputClasses}
             />
           </div>
 
-          <div className="border-t border-gray-200 pt-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Features</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-              {FEATURE_OPTIONS.map((f) => (
-                <label key={f} className="inline-flex items-center space-x-2">
+          <div>
+            <p className="font-medium mb-2">Features</p>
+            <div className="grid grid-cols-2 gap-2">
+              {FEATURES.map((f) => (
+                <label key={f} className="flex items-center gap-2 text-sm">
                   <input
                     type="checkbox"
                     checked={features.includes(f)}
                     onChange={() => toggleFeature(f)}
-                    className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                   />
-                  <span className="text-sm text-gray-700">{f}</span>
+                  {f}
                 </label>
               ))}
             </div>
-            <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700">
-                Additional / custom features (optional)
-              </label>
-              <textarea
-                placeholder="List any extra features..."
-                value={form.extraFeatures}
-                onChange={(e) => updateField("extraFeatures", e.target.value)}
-                rows={3}
-                className={inputClasses}
-              />
-            </div>
           </div>
 
-          <div className="border-t border-gray-200 pt-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">
-              Car Images (URLs)
-            </h3>
-            <div className="space-y-3">
-              {imageUrls.map((url, i) => (
-                <input
-                  key={i}
-                  placeholder={`Image ${i + 1} URL`}
-                  value={url}
-                  onChange={(e) => updateImage(i, e.target.value)}
-                  className={inputClasses}
-                />
+          <div>
+            <p className="font-medium mb-2">Car Images</p>
+            <div className="grid grid-cols-3 gap-4 mb-4">
+              {imageFiles.map((file, i) => (
+                <div key={i} className="relative">
+                  <img
+                    src={URL.createObjectURL(file)}
+                    className="h-32 w-full object-cover rounded border"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeImage(i)}
+                    className="absolute top-1 right-1 bg-black/70 text-white text-xs px-2 py-1 rounded"
+                  >
+                    ✕
+                  </button>
+                </div>
               ))}
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="h-32 border-2 border-dashed rounded flex items-center justify-center text-sm text-gray-600"
+              >
+                + Add Images
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={addImageField}
-              className="mt-3 inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-sm font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              ➕ Add another image
-            </button>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={(e) => handleFiles(e.target.files)}
+              className="hidden"
+            />
           </div>
 
-          <div className="pt-6">
-            <button
-              disabled={loading}
-              className="w-full inline-flex justify-center py-3 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 transition-colors"
-            >
-              {loading ? "Saving..." : "Save Car"}
-            </button>
-          </div>
+          <button
+            disabled={loading}
+            className="w-full py-3 rounded bg-indigo-600 text-white font-medium disabled:opacity-50"
+          >
+            {loading ? "Saving..." : "Save Car"}
+          </button>
         </form>
       </div>
     </div>
