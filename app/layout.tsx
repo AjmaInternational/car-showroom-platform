@@ -3,8 +3,9 @@
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { supabase } from "@/lib/supabaseClient"
+import "./globals.css"
 
-export default function SafranLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
@@ -14,10 +15,18 @@ export default function SafranLayout({
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       if (!data.session) {
-        router.replace("/safranbrother/login")
+        // Only redirect if we're under /safranbrother and NOT on the login page
+        const path = window.location.pathname
+        if (path.startsWith("/safranbrother") && path !== "/safranbrother/login") {
+            router.replace("/safranbrother/login")
+        }
       }
     })
   }, [router])
 
-  return <>{children}</>
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  )
 }
