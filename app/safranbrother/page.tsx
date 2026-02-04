@@ -4,11 +4,19 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { supabaseBrowser } from "@/lib/supabaseBrowser"
 
+interface Car {
+  id: string
+  title: string
+  brand: string
+  price: number
+  status: string
+}
+
 export default function Dashboard() {
   const router = useRouter()
-  const [cars, setCars] = useState<any[]>([])
+  const [cars, setCars] = useState<Car[]>([])
 
-  async function loadCars() {
+  const loadCars = async () => {
     const { data } = await supabaseBrowser
       .from("cars")
       .select("*")

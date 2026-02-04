@@ -23,24 +23,31 @@ export default function HomePage() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    fetchCars()
-  }, [])
+    let ignore = false
 
-  async function fetchCars() {
-    const { data, error } = await supabaseBrowser
-      .from("cars")
-      .select("*")
-      .eq("status", "available")
-      .order("created_at", { ascending: false })
+    async function fetchCars() {
+      const { data, error: fetchError } = await supabaseBrowser
+        .from("cars")
+        .select("*")
+        .eq("status", "available")
+        .order("created_at", { ascending: false })
 
-    if (error) {
-      setError(error.message)
-    } else {
-      setCars(data || [])
+      if (!ignore) {
+        if (fetchError) {
+          setError(fetchError.message)
+        } else {
+          setCars(data || [])
+        }
+        setLoading(false)
+      }
     }
 
-    setLoading(false)
-  }
+    fetchCars()
+
+    return () => {
+      ignore = true
+    }
+  }, [])
 
   if (loading) return <p style={{ padding: 40 }}>Loading…</p>
 
@@ -58,33 +65,40 @@ export default function HomePage() {
 
       {cars.length === 0 && <p>No cars available</p>}
 
-      {cars.map((car) => (
-        <div
-          key={car.id}
-          style={{
-            border: "1px solid #ccc",
-            padding: 20,
-            marginTop: 20,
-          }}
-        >
-          {car.image_urls?.[0] && (
-            <img src={car.image_urls[0]} width={300} />
-          )}
+      {cars.map((car) => {
+        // Filter out empty strings and the problematic placeholder image
+        const validImages = (car.image_urls || []).filter(
+          (url) => url && url !== "/images/chevroletcar.jpg"
+        )
 
-          <h2>
-            {car.brand} {car.model}
-          </h2>
+        return (
+          <div
+            key={car.id}
+            style={{
+              border: "1px solid #ccc",
+              padding: 20,
+              marginTop: 20,
+            }}
+          >
+            {validImages.length > 0 && (
+              <img src={validImages[0]} width={300} alt={car.title} />
+            )}
 
-          <p>{car.title}</p>
-          <p>£{car.price}</p>
-          <p>
-            {car.year} • {car.mileage} miles
-          </p>
-          <p>
-            {car.color} • {car.location}
-          </p>
-        </div>
-      ))}
+            <h2>
+              {car.brand} {car.model}
+            </h2>
+
+            <p>{car.title}</p>
+            <p>£{car.price}</p>
+            <p>
+              {car.year} • {car.mileage} miles
+            </p>
+            <p>
+              {car.color} • {car.location}
+            </p>
+          </div>
+        )
+      })}
     </div>
   )
 }

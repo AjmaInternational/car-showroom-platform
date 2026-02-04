@@ -4,12 +4,25 @@ import { useEffect, useState } from "react"
 import { useRouter, useParams } from "next/navigation"
 import { supabaseBrowser } from "@/lib/supabaseBrowser"
 
+interface CarForm {
+  title: string;
+  brand: string;
+  model: string;
+  year: string;
+  mileage: string;
+  fuel: string;
+  transmission: string;
+  color: string;
+  price: string;
+  location: string;
+}
+
 export default function EditCarPage() {
   const router = useRouter()
   const { id } = useParams()
 
   const [loading, setLoading] = useState(true)
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<CarForm>({
     title: "",
     brand: "",
     model: "",
@@ -22,8 +35,20 @@ export default function EditCarPage() {
     location: "",
   })
 
+  const [imageUrls, setImageUrls] = useState<string[]>(["", "", ""])
+
   function update(key: string, value: string) {
     setForm((p) => ({ ...p, [key]: value }))
+  }
+
+  function updateImage(index: number, value: string) {
+    const copy = [...imageUrls]
+    copy[index] = value
+    setImageUrls(copy)
+  }
+
+  function addImageField() {
+    setImageUrls((prev) => [...prev, ""])
   }
 
   useEffect(() => {
@@ -49,6 +74,10 @@ export default function EditCarPage() {
         location: data.location ?? "",
       })
 
+      if (data.image_urls && Array.isArray(data.image_urls)) {
+        setImageUrls(data.image_urls.length > 0 ? data.image_urls : ["", "", ""])
+      }
+
       setLoading(false)
     }
 
@@ -69,6 +98,7 @@ export default function EditCarPage() {
       color: form.color,
       price: Number(form.price),
       location: form.location,
+      image_urls: imageUrls.filter(Boolean),
     }).eq("id", id)
 
     if (error) {
@@ -102,14 +132,33 @@ export default function EditCarPage() {
           <input
             key={k}
             placeholder={label}
-            value={(form as any)[k]}
+            value={form[k as keyof CarForm]}
             onChange={(e) => update(k, e.target.value)}
             required
             style={{ width: "100%", padding: 10, marginTop: 10 }}
           />
         ))}
 
-        <button style={{ marginTop: 20, padding: 12 }}>
+        <h3 style={{ marginTop: 20 }}>Car Images (URLs)</h3>
+        {imageUrls.map((url, i) => (
+          <input
+            key={i}
+            placeholder={`Image ${i + 1} URL`}
+            value={url}
+            onChange={(e) => updateImage(i, e.target.value)}
+            style={{ width: "100%", padding: 10, marginTop: 10 }}
+          />
+        ))}
+
+        <button
+          type="button"
+          onClick={addImageField}
+          style={{ marginTop: 10 }}
+        >
+          + Add another image
+        </button>
+
+        <button style={{ marginTop: 20, padding: 12, display: "block" }}>
           Update Car
         </button>
       </form>
