@@ -1,17 +1,17 @@
 export const runtime = "nodejs"
 
 import { NextResponse } from "next/server"
-import * as nodemailer from "nodemailer"
+import nodemailer from "nodemailer"
 import { createClient } from "@supabase/supabase-js"
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
 
 export async function POST(req: Request) {
   const { name, email, vehicle, message } = await req.json()
   const today = new Date().toISOString().slice(0, 10)
+
+  const supabase = createClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
 
   const { count } = await supabase
     .from("contact_requests")
@@ -37,8 +37,8 @@ export async function POST(req: Request) {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
+      user: process.env.EMAIL_USER!,
+      pass: process.env.EMAIL_PASS!,
     },
   })
 
