@@ -1,11 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { useRouter } from "next/navigation"
-import { supabaseBrowser } from "@/lib/supabaseBrowser"
+import { supabase as supabaseBrowser } from "@/lib/supabase"
 
 export default function AddCarPage() {
   const router = useRouter()
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
   const [loading, setLoading] = useState(false)
 
   const [form, setForm] = useState({
@@ -21,196 +22,246 @@ export default function AddCarPage() {
     price: "",
     location: "",
     description: "",
-    extraFeatures: "",
   })
 
-  const [imageUrls, setImageUrls] = useState<string[]>(["", "", ""])
   const [features, setFeatures] = useState<string[]>([])
+  const [imageFiles, setImageFiles] = useState<File[]>([])
 
-  const FEATURE_OPTIONS = [
+  const FEATURES = [
     "Air Conditioning",
-    "Bluetooth",
     "Reverse Camera",
-    "Alloy Wheels",
     "Leather Seats",
+    "Bluetooth",
+    "Alloy Wheels",
   ]
 
   function updateField(key: string, value: string) {
-    setForm((prev) => ({ ...prev, [key]: value }))
+    setForm((p) => ({ ...p, [key]: value }))
   }
 
-  function toggleFeature(feature: string) {
-    setFeatures((prev) =>
-      prev.includes(feature)
-        ? prev.filter((f) => f !== feature)
-        : [...prev, feature]
+  function toggleFeature(f: string) {
+    setFeatures((p) =>
+      p.includes(f) ? p.filter((x) => x !== f) : [...p, f]
     )
   }
 
-  function updateImage(index: number, value: string) {
-    const copy = [...imageUrls]
-    copy[index] = value
-    setImageUrls(copy)
+  function handleFiles(files: FileList | null) {
+    if (!files) return
+    setImageFiles((p) => [...p, ...Array.from(files)])
   }
 
-  function addImageField() {
-    setImageUrls((prev) => [...prev, ""])
+  function removeImage(i: number) {
+    setImageFiles((p) => p.filter((_, idx) => idx !== i))
+  }
+
+  async function uploadImages(): Promise<string[]> {
+    const urls: string[] = []
+
+    for (const file of imageFiles) {
+      const ext = file.name.split(".").pop()
+      const name = `${crypto.randomUUID()}.${ext}`
+      const path = `cars/${name}`
+
+      const { error } = await supabaseBrowser.storage
+        .from("images")
+        .upload(path, file)
+
+      if (error) throw error
+
+      const { data } = supabaseBrowser.storage
+        .from("images")
+        .getPublicUrl(path)
+
+      urls.push(data.publicUrl)
+    }
+
+    return urls
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
 
-    const { error } = await supabaseBrowser.from("cars").insert({
-      title: form.title,
-      brand: form.brand,
-      model: form.model,
-      year: Number(form.year),
-      mileage: Number(form.mileage),
-      fuel: form.fuel,
-      transmission: form.transmission,
-      condition: form.condition.toLowerCase(),
-      color: form.color,
-      price: Number(form.price),
-      location: form.location,
-      description: form.description,
-      features,
-      extra_features: form.extraFeatures || null,
-      image_urls: imageUrls.filter(Boolean),
-      status: "available",
-    })
+    try {
+      const image_urls = await uploadImages()
 
-    setLoading(false)
+      const { error } = await supabaseBrowser.from("cars").insert({
+        ...form,
+        year: Number(form.year),
+        mileage: Number(form.mileage),
+        price: Number(form.price),
+        condition: form.condition.toLowerCase(),
+        features,
+        image_urls,
+        status: "available",
+      })
 
-    if (error) {
-      alert(error.message)
-      return
+      if (error) throw error
+      router.push("/safranbrother")
+    } catch (err: any) {
+      alert(err.message || "Error")
+    } finally {
+      setLoading(false)
     }
-
-    alert("Car added successfully")
-    router.push("/safranbrother")
   }
 
+  const input =
+    "mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+
+  const label = "text-sm font-medium text-gray-900"
+
   return (
-    <div style={{ padding: 40, maxWidth: 720 }}>
-      <h1 style={{ fontSize: 28, fontWeight: "bold" }}>
-        Add New Car
-      </h1>
+    <div className="max-w-6xl mx-auto p-6">
+      <button
+        onClick={() => router.push("/safranbrother")}
+        className="text-sm text-indigo-600 hover:underline mb-4"
+      >
+        ← Back to Dashboard
+      </button>
 
-      <form onSubmit={handleSubmit}
-  onKeyDown={(e) => {
-    if (e.key === "Enter") {
-      e.preventDefault()
-    }
-  }}>
-        
-        {[
-          ["title", "Car Title"],
-          ["brand", "Brand"],
-          ["model", "Model"],
-          ["year", "Year"],
-          ["mileage", "Mileage"],
-          ["color", "Color"],
-          ["price", "Price (£)"],
-          ["location", "Location (e.g. Kingston, London)"],
-        ].map(([key, label]) => (
-          <input
-            key={key}
-            placeholder={label}
-            value={(form as any)[key]}
-            onChange={(e) => updateField(key, e.target.value)}
-            required
-            style={{ width: "100%", padding: 10, marginTop: 10 }}
-          />
-        ))}
+      <div className="bg-white rounded-xl shadow p-8 text-gray-900">
+        <h1 className="text-2xl font-bold mb-1">Add New Car</h1>
+        <p className="text-sm text-gray-500 mb-8">
+          Enter the details of the vehicle to list it in the showroom.
+        </p>
 
-        {/* SELECT FIELDS */}
-        <select
-          value={form.fuel}
-          onChange={(e) => updateField("fuel", e.target.value)}
-          style={{ width: "100%", padding: 10, marginTop: 10 }}
-        >
-          <option>Petrol</option>
-          <option>Diesel</option>
-          <option>Hybrid</option>
-          <option>Electric</option>
-        </select>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {[
+              ["title", "Car Title"],
+              ["brand", "Brand"],
+              ["model", "Model"],
+              ["year", "Year"],
+              ["mileage", "Mileage"],
+              ["color", "Color"],
+              ["price", "Price (£)"],
+              ["location", "Location"],
+            ].map(([k, l]) => (
+              <div key={k}>
+                <label className={label}>{l}</label>
+                <input
+                  className={input}
+                  value={form[k as keyof typeof form]}
+                  onChange={(e) => updateField(k, e.target.value)}
+                  required
+                />
+              </div>
+            ))}
+          </div>
 
-        <select
-          value={form.transmission}
-          onChange={(e) => updateField("transmission", e.target.value)}
-          style={{ width: "100%", padding: 10, marginTop: 10 }}
-        >
-          <option>Automatic</option>
-          <option>Manual</option>
-        </select>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <label className={label}>Fuel Type</label>
+              <select
+                className={input}
+                value={form.fuel}
+                onChange={(e) => updateField("fuel", e.target.value)}
+              >
+                <option>Petrol</option>
+                <option>Diesel</option>
+                <option>Hybrid</option>
+                <option>Electric</option>
+              </select>
+            </div>
 
-        <select
-          value={form.condition}
-          onChange={(e) => updateField("condition", e.target.value)}
-          style={{ width: "100%", padding: 10, marginTop: 10 }}
-        >
-          <option>Used</option>
-          <option>New</option>
-        </select>
+            <div>
+              <label className={label}>Transmission</label>
+              <select
+                className={input}
+                value={form.transmission}
+                onChange={(e) =>
+                  updateField("transmission", e.target.value)
+                }
+              >
+                <option>Automatic</option>
+                <option>Manual</option>
+              </select>
+            </div>
 
-        <textarea
-          placeholder="Car description"
-          value={form.description}
-          onChange={(e) => updateField("description", e.target.value)}
-          rows={4}
-          style={{ width: "100%", marginTop: 10 }}
-        />
+            <div>
+              <label className={label}>Condition</label>
+              <select
+                className={input}
+                value={form.condition}
+                onChange={(e) => updateField("condition", e.target.value)}
+              >
+                <option>Used</option>
+                <option>New</option>
+              </select>
+            </div>
+          </div>
 
-        {/* FEATURES */}
-        <h3 style={{ marginTop: 20 }}>Features</h3>
-        {FEATURE_OPTIONS.map((f) => (
-          <label key={f} style={{ display: "block" }}>
+          <div>
+            <label className={label}>Car Description</label>
+            <textarea
+              rows={4}
+              className={input}
+              value={form.description}
+              onChange={(e) => updateField("description", e.target.value)}
+            />
+          </div>
+
+          <div>
+            <p className="font-medium mb-2">Features</p>
+            <div className="grid grid-cols-2 gap-2">
+              {FEATURES.map((f) => (
+                <label key={f} className="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={features.includes(f)}
+                    onChange={() => toggleFeature(f)}
+                  />
+                  {f}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <p className="font-medium mb-2">Car Images</p>
+            <div className="grid grid-cols-3 gap-4 mb-4">
+              {imageFiles.map((file, i) => (
+                <div key={i} className="relative">
+                  <img
+                    src={URL.createObjectURL(file)}
+                    className="h-32 w-full object-cover rounded border"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeImage(i)}
+                    className="absolute top-1 right-1 bg-black/70 text-white text-xs px-2 py-1 rounded"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="h-32 border-2 border-dashed rounded flex items-center justify-center text-sm text-gray-600"
+              >
+                + Add Images
+              </button>
+            </div>
+
             <input
-              type="checkbox"
-              checked={features.includes(f)}
-              onChange={() => toggleFeature(f)}
-            />{" "}
-            {f}
-          </label>
-        ))}
+              ref={fileInputRef}
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={(e) => handleFiles(e.target.files)}
+              className="hidden"
+            />
+          </div>
 
-        <textarea
-          placeholder="Additional / custom features (optional)"
-          value={form.extraFeatures}
-          onChange={(e) => updateField("extraFeatures", e.target.value)}
-          rows={3}
-          style={{ width: "100%", marginTop: 10 }}
-        />
-
-        {/* IMAGES */}
-        <h3 style={{ marginTop: 20 }}>Car Images (URLs)</h3>
-
-        {imageUrls.map((url, i) => (
-          <input
-            key={i}
-            placeholder={`Image ${i + 1} URL`}
-            value={url}
-            onChange={(e) => updateImage(i, e.target.value)}
-            style={{ width: "100%", padding: 10, marginTop: 10 }}
-          />
-        ))}
-
-        <button
-          type="button"
-          onClick={addImageField}
-          style={{ marginTop: 10 }}
-        >
-          ➕ Add another image
-        </button>
-
-        <button
-          disabled={loading}
-          style={{ marginTop: 20, padding: 12 }}
-        >
-          {loading ? "Saving..." : "Save Car"}
-        </button>
-      </form>
+          <button
+            disabled={loading}
+            className="w-full py-3 rounded bg-indigo-600 text-white font-medium disabled:opacity-50"
+          >
+            {loading ? "Saving..." : "Save Car"}
+          </button>
+        </form>
+      </div>
     </div>
   )
 }
